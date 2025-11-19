@@ -1,0 +1,52 @@
+
+<div class="d-md-flex justify-content-between align-items-center bg-white shadow rounded p-2 mt-4">
+<form class="card-body text-start">
+    <div class="registration-form text-dark text-start">
+        <div class="row g-lg-0">
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="mb-3 mb-sm-0">
+                    <label class="form-label d-none fs-6">Buscar :</label>
+                    <div class="filter-search-form position-relative filter-border">
+                        <i data-feather="search" class="fea icon-20 icons"></i>
+                        <input name="name" type="text" id="job-keyword" class="form-control filter-input-box bg-light border-0" placeholder="Busca tu requerimiento">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="mb-3 mb-sm-0">
+                    <label class="form-label d-none fs-6">Ubicacion</label>
+                    <div class="filter-search-form position-relative filter-border">
+                        <i data-feather="map-pin" class="fea icon-20 icons"></i>
+                        <ng-multiselect-dropdown
+                            [placeholder]="'Ubicacion'"
+                            [settings]="dropdownSettings"
+                            [data]="loction"
+                        >
+                        </ng-multiselect-dropdown>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="mb-3 mb-sm-0">
+                    <label class="form-label d-none fs-6">Tipo :</label>
+                    <div class="filter-search-form relative filter-border">
+                        <i data-feather="briefcase" class="fea icon-20 icons"></i>
+                        <ng-multiselect-dropdown
+                            [placeholder]="'Tipo'"
+                            [settings]="dropdownSettings"
+                            [data]="type"
+                        >
+                        </ng-multiselect-dropdown>
+                    </div>
+                </div>  
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12">
+                <input type="submit" id="search" name="search" style="height: 60px;" class="btn btn-primary searchbtn w-100" value="Buscar">
+            </div>
+        </div>
+    </div>
+</form>
+ </div>

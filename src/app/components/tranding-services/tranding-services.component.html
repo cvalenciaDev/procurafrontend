@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col-12 mt-4">
+        <div class="tiny-five-item">
+            <div *ngFor="let item of servicesData" class="tiny-slide">
+                <div class="card features rounded shadow position-relative overflow-hidden m-2">
+                    <div class="card-body p-0">
+                        <div class="card-img">
+                            <img [src]="item.image" class="img-fluid" alt="">
+                            <div class="card-overlay"></div>
+                        </div>
+
+                        <div class="position-absolute bottom-0 start-0 m-3">
+                            <a [routerLink]="[]" class="title h5 text-white">{{item.title}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

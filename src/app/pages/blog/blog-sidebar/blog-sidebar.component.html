@@ -1,0 +1,98 @@
+<app-navbar/>
+
+<section class="bg-half-170 d-table w-100" style="background: url('/assets/images/hero/bg.jpg');">
+    <div class="bg-overlay bg-gradient-overlay"></div>
+    <div class="container">
+        <div class="row mt-5 justify-content-center">
+            <div class="col-12">
+                <div class="title-heading text-center">
+                    <p class="text-white-50 para-desc mx-auto mb-0">Latest News</p>
+                    <h5 class="heading fw-semibold mb-0 sub-heading text-white title-dark">Blogs & News</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="position-middle-bottom">
+            <nav aria-label="breadcrumb" class="d-block">
+                <ul class="breadcrumb breadcrumb-muted mb-0 p-0">
+                    <li class="breadcrumb-item"><a [routerLink]="'/'">Jobnova</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Blogs</li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+<div class="position-relative">
+    <div class="shape overflow-hidden text-white">
+        <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+        </svg>
+    </div>
+</div>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-8 col-md-6 col-12">
+                <div class="row g-4">
+                    <div *ngFor="let item of blogData" class="col-lg-6">
+                        <div class="card blog blog-primary shadow rounded overflow-hidden border-0">
+                            <div class="card-img blog-image position-relative overflow-hidden rounded-0">
+                                <div class="position-relative overflow-hidden">
+                                    <img [src]="item.image" class="img-fluid" alt="">
+                                    <div class="card-overlay"></div>
+                                </div>
+                            </div>
+
+                            <div class="card-body blog-content position-relative p-0">
+                                <div class="blog-tag px-4">
+                                    <a [routerLink]="[]" class="badge bg-primary rounded-pill">{{item.tag}}</a>
+                                </div>
+                                <div class="p-4">
+                                    <ul class="list-unstyled text-muted small mb-2">
+                                        <li class="d-inline-flex align-items-center me-2"><i data-feather="calendar" class="fea icon-ex-sm me-1 text-dark"></i>{{item.date}}</li>
+                                        <li class="d-inline-flex align-items-center"><i data-feather="clock" class="fea icon-ex-sm me-1 text-dark"></i>5 min read</li>
+                                    </ul>
+
+                                    <a [routerLink]="['/blog-detail',item.id]" class="title fw-semibold fs-5 text-dark">{{item.title}}</a>
+                                    
+                                    <ul class="list-unstyled d-flex justify-content-between align-items-center text-muted mb-0 mt-3">
+                                        <li class="list-inline-item me-2"><a [routerLink]="['/blog-detail',item.id]" class="btn btn-link primary text-dark">Read Now <i class="mdi mdi-arrow-right"></i></a></li>
+                                        <li class="list-inline-item"><span class="text-dark">By</span> <a [routerLink]="[]" class="text-muted link-title">{{item.company}}</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 mt-4 pt-2">
+                        <ul class="pagination justify-content-center mb-0">
+                            <li class="page-item">
+                                <a class="page-link" [routerLink]="[]" aria-label="Previous">
+                                    <span aria-hidden="true"><i class="mdi mdi-chevron-left fs-6"></i></span>
+                                </a>
+                            </li>
+                            <li class="page-item"><a class="page-link" [routerLink]="[]">1</a></li>
+                            <li class="page-item active"><a class="page-link" [routerLink]="[]">2</a></li>
+                            <li class="page-item"><a class="page-link" [routerLink]="[]">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" [routerLink]="[]" aria-label="Next">
+                                    <span aria-hidden="true"><i class="mdi mdi-chevron-right fs-6"></i></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-12">
+                <app-blog-side/>
+            </div>
+        </div>
+    </div>
+</section>
+<app-footer/>
+
+<app-scroll-to-top/>

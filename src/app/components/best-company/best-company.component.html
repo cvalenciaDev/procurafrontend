@@ -1,0 +1,58 @@
+<div class="row g-4 align-items-center">
+    <div class="col-lg-6 col-md-6 mb-5  order-md-2 order-1">
+        <div class="about-right">
+            <div class="position-relative shadow rounded img-one">
+                <img [src]="'/assets/images/about/ab03.jpg'" class="img-fluid rounded" alt="work-image">
+            </div>
+
+            <div class="img-two shadow rounded p-2 bg-white">
+                <img [src]="'/assets/images/about/ab04.jpg'" class="img-fluid rounded" alt="work-image">
+
+                <div class="position-absolute top-0 start-50 translate-middle">
+                    <a [routerLink]="[]" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="avatar avatar-md-md rounded-pill shadow card d-flex justify-content-center align-items-center lightbox">
+                        <i class="mdi mdi-play mdi-24px text-primary"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 col-md-6 mt-4 pt-2 mt-sm-0 pt-sm-0 order-md-1 order-2">
+        <div class="section-title mb-4 me-lg-5">
+            <h4 class="title mb-3">Encuentra los Proveedores Clave.</h4>
+            <p class="text-muted para-desc mb-0">Busca y publica tus requerimientos de servicios en Procura. Accede a un ecosistema de socios estratégicos y fortalece tus proyectos en Perú.</p>
+        </div>
+
+        <div class="row g-4 mt-0">
+            <div *ngFor="let item of companyData.slice(0,6)" class="col-md-6">
+                <div class="employer-card rounded shadow p-2 bg-light">
+                    <div class="d-flex align-items-center">
+                        <img [src]="item.image" class="avatar avatar-md-sm rounded shadow p-2 bg-white" alt="">
+
+                        <div class="content ms-3">
+                            <a [routerLink]="['/employer-profile',item.id]" class="h5 title text-dark">{{item.name}}</a>
+                            <span class="text-muted d-flex align-items-center small mt-1">{{item.jobs}} vacancy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <a [routerLink]="'/employers'" class="btn btn-link primary text-muted">See More Companies <i class="mdi mdi-arrow-right align-middle"></i></a>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i data-feather="x" class="text-slate-300"></i></button>
+            </div>
+            <div class="modal-body p-2">
+                <iframe width="100%" height="450" src="https://www.youtube.com/embed/yba7hPeTSjk?playlist=yba7hPeTSjk&loop=1"></iframe>
+            </div>
+        </div>
+    </div>
+</div>

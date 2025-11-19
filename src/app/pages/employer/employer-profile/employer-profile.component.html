@@ -1,0 +1,207 @@
+<app-navbar/>
+
+<section class="bg-half-170 d-table w-100" style="background: url('/assets/images/hero/bg4.jpg') center;">
+    <div class="bg-overlay bg-gradient-overlay-2"></div>
+</section>
+<div class="position-relative">
+    <div class="shape overflow-hidden text-white">
+        <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+        </svg>
+    </div>
+</div>
+
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 mt-4">
+                <div class="features-absolute">
+                    <div class="d-md-flex justify-content-between align-items-center bg-white shadow rounded p-4">
+                        <div class="d-flex align-items-center">
+                            <img [src]="data?.image ? data?.image : 'assets/images/company/constructura_andes-logo.png'" class="avatar avatar-md-md rounded shadow p-3 bg-white" alt="">
+
+                            <div class="ms-3">
+                                <h5>{{data?.name ? data?.name : 'Constructora Andes'}}</h5>
+                                <span class="text-muted d-flex align-items-center"><i data-feather="map-pin" class="fea icon-sm me-1"></i>{{data?.loction ? data?.loction : 'Lima, Perú'}}</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 mt-md-0">
+                            <a [routerLink]="[]" class="btn btn-sm btn-primary me-1">Síguenos</a>
+                            <a [routerLink]="'/job-grid-one'" class="btn btn-sm btn-soft-primary">Mirar mas trabajos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-8 col-md-7 col-12">
+                <h4 class="mb-4">Historia de la compañia</h4>
+
+                <p class="text-muted">Es un hecho conocido que muchas veces el lector se distrae al observar el diseño de una página en lugar de su contenido. En Constructora Andes, creemos en una presentación clara y ordenada, con información relevante para cada proyecto que desarrollamos.</p>
+                <p class="text-muted">A diferencia de lo que muchos piensan, no se trata solo de palabras al azar. Nuestra historia se basa en una sólida experiencia en el sector construcción, inspirada en técnicas y principios que han perdurado a lo largo del tiempo. Constructora Andes aplica conocimientos tradicionales combinados con tecnología moderna para lograr resultados duraderos.</p>
+
+
+                <div class="row g-4">
+                    <div class="col-12"><img [src]="'/assets/images/company/1.jpg'" class="rounded shadow img-fluid" alt=""></div>
+                    <div class="col-6"><img [src]="'/assets/images/company/2.jpg'" class="rounded shadow img-fluid" alt=""></div>
+                    <div class="col-6"><img [src]="'/assets/images/company/3.jpg'" class="rounded shadow img-fluid" alt=""></div>
+                </div>
+
+                <h4 class="my-4">Vacantes</h4>
+
+                <div class="row g-4">
+                    <div *ngFor="let item of jobData.slice(0,4)" class="col-lg-6 col-12">
+                        <div class="job-post rounded shadow bg-white">
+                            <div class="p-4">
+                                <a [routerLink]="'/job-detail-one'" class="text-dark title h5">{{item.title}}</a>
+
+                                <p class="text-muted d-flex align-items-center small mt-3"><i data-feather="clock" class="fea icon-sm text-primary me-1"></i>Posted {{item.posted}}</p>
+
+                                <ul class="list-unstyled d-flex justify-content-between align-items-center mb-0 mt-3">
+                                    <li class="list-inline-item"><span class="badge bg-soft-primary">{{item.jobType}}</span></li>
+                                    <li class="list-inline-item"><span class="text-muted d-flex align-items-center small"><i data-feather="dollar-sign" class="fea icon-sm text-primary me-1"></i>{{item.salary}}</span></li>
+                                </ul>
+                            </div>
+                            <div class="d-flex align-items-center p-4 border-top">
+                                <img [src]="item.image" class="avatar avatar-small rounded shadow p-3 bg-white" alt="">
+
+                                <div class="ms-3">
+                                    <h6>{{item.name}}</h6>
+                                    <span class="text-muted d-flex align-items-center"><i data-feather="map-pin" class="fea icon-sm me-1"></i>{{item.location}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-5 col-12">
+                <div class="card bg-white p-4 rounded shadow sticky-bar">
+                    <div class="map map-400px border-0">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d39206.002432144705!2d-95.4973981212445!3d29.709510002925988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640c16de81f3ca5%3A0xf43e0b60ae539ac9!2sGerald+D.+Hines+Waterwall+Park!5e0!3m2!1sen!2sin!4v1566305861440!5m2!1sen!2sin" class="rounded" style="border:0" allowfullscreen></iframe>
+                    </div>
+
+                    <div class="mt-3">
+                        <div class="d-flex align-items-center justify-content-between mt-2">
+                            <span class="text-muted fw-medium">Fundado</span>
+                            <span>1984</span>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between mt-2">
+                            <span class="text-muted fw-medium">Fundador</span>
+                            <span>Mario Quispe</span>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between mt-2">
+                            <span class="text-muted fw-medium">Ciudad</span>
+                            <span>Lima</span>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between mt-2">
+                            <span class="text-muted fw-medium">Numero de Trabajadores</span>
+                            <span>+ 75000</span>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between mt-2">
+                            <span class="text-muted fw-medium">Página web</span>
+                            <span>www.constructorandes.com</span>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between mt-2">
+                            <span class="text-muted fw-medium">Social:</span>
+                            
+                            <ul class="list-unstyled social-icon text-sm-end mb-0">
+                                <li class="list-inline-item me-1"><a href="https://dribbble.com/shreethemes" target="_blank" class="rounded"><i data-feather="dribbble" class="fea icon-sm align-middle" title="dribbble"></i></a></li>
+                                <li class="list-inline-item me-1"><a href="http://linkedin.com/company/shreethemes" target="_blank" class="rounded"><i data-feather="linkedin" class="fea icon-sm align-middle" title="Linkedin"></i></a></li>
+                                <li class="list-inline-item me-1"><a href="https://www.facebook.com/shreethemes" target="_blank" class="rounded"><i data-feather="facebook" class="fea icon-sm align-middle" title="facebook"></i></a></li>
+                                <li class="list-inline-item me-1"><a href="https://www.instagram.com/shreethemes/" target="_blank" class="rounded"><i data-feather="instagram" class="fea icon-sm align-middle" title="instagram"></i></a></li>
+                                <li class="list-inline-item"><a href="https://twitter.com/shreethemes" target="_blank" class="rounded"><i data-feather="twitter" class="fea icon-sm align-middle" title="twitter"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-top">
+                        <h5>Danos un momento</h5>
+                        <form class="mt-4">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">Nombre <span class="text-danger">*</span></label>
+                                        <input name="name" id="name" type="text" class="form-control" placeholder="Name :">
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">Correo <span class="text-danger">*</span></label>
+                                        <input name="email" id="email" type="email" class="form-control" placeholder="Email :">
+                                    </div> 
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">Empresa</label>
+                                        <input name="subject" id="subject" class="form-control" placeholder="Subject :">
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">Comentarios <span class="text-danger">*</span></label>
+                                        <textarea name="comments" id="comments" rows="4" class="form-control" placeholder="Message :"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="d-grid">
+                                        <button type="submit" id="submit" name="send" class="btn btn-primary">Send Message</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-100 mt-60">
+        <div class="row justify-content-center mb-4 pb-2">
+            <div class="col-12">
+                <div class="section-title text-center">
+                    <h4 class="title mb-3">Compañias relacionadas</h4>
+                    <p class="text-muted para-desc mx-auto mb-0">Accede a una amplia red de proveedores calificados en Perú. Descubre el valor de mercado de los servicios y explora perfiles detallados de miles de empresas a nivel nacional.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div *ngFor="let item of companyData.slice(0,4)" class="col-lg-3 col-md-4 col-sm-6 col-12 mt-5">
+                <div class="employer-card position-relative bg-white rounded shadow p-4 mt-3">
+                    <div class="employer-img d-flex justify-content-center align-items-center bg-white shadow-md rounded">
+                        <img [src]="item.image" class="avatar avatar-ex-small" alt="">
+                    </div>
+
+                    <div class="content mt-3">
+                        <a [routerLink]="'/employer-profile'" class="title text-dark h5">{{item.name}}</a>
+                        <p class="text-muted mt-2 mb-0">{{item.desc}}</p>
+                    </div>
+
+                    <ul class="list-unstyled d-flex justify-content-between align-items-center border-top mt-3 pt-3 mb-0">
+                        <li class="text-muted d-inline-flex align-items-center"><i data-feather="map-pin" class="fea icon-sm me-1 align-middle"></i>{{item.loction}}</li>
+                        <li class="list-inline-item text-primary fw-medium">{{item.jobs}} Jobs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<app-footer-top/>
+
+<app-scroll-to-top/>

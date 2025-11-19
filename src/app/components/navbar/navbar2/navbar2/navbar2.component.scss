@@ -1,0 +1,107 @@
+#topnav {
+  padding-bottom: 0.25rem; /* o 0 */
+  padding-top: 0.25rem;   /* ajustás según necesites */
+}
+
+
+/* === BOTONES DEL NAVBAR === */
+.custom-white-border-text {
+  border-color: white;
+  color: white;
+}
+.custom-white-border-text:hover {
+  color: white;
+}
+
+/* === ESTILOS GENERALES NAVBAR === */
+#topnav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1050;
+  background-color: transparent;
+
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Cuando se activa scroll (clase .nav-sticky desde TS) */
+#topnav.nav-sticky {
+  background-color: #fff !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* === RESPONSIVE (<= 767px) === */
+@media (max-width: 767px) {
+  /* Navbar siempre blanco en móviles */
+  #topnav {
+    min-height: 20px;
+    padding: 2px 0;
+    background-color: #fff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Logo más pequeño */
+  #topnav .logo img {
+    max-width: 80px;
+    height: auto;
+  }
+
+  /* Contenedor interno compacto */
+  #topnav .container {
+    padding-bottom: 0.25rem;
+    padding: 0 8px ;
+    display: flex ;
+    align-items: center ;
+    justify-content: space-between ;
+  }
+
+  /* Botones compactos */
+  #topnav .buy-button .btn {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    margin: 0 1px;
+    line-height: 1.2;
+    height: 25px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  /* Menú hamburguesa */
+  #topnav .navbar-toggle {
+    padding: 2px;
+    width: 22px;
+    height: 15px;
+  }
+  #topnav .navbar-toggle .lines span {
+    height: 2px;
+    margin: 3px 0;
+    background-color: #333 !important;
+  }
+
+  /* Forzar logo oscuro en móviles */
+  #topnav .logo img.l-light {
+    display: none !important;
+  }
+  #topnav .logo img.l-dark {
+    display: inline-block !important;
+  }
+}
+
+/* === RESPONSIVE (<= 480px) === */
+@media (max-width: 480px) {
+  #topnav .logo img {
+    max-width: 70px !important;
+  }
+
+  #topnav .buy-button .btn {
+    font-size: 0.6rem;
+    padding: 1px 4px;
+    height: 22px;
+  }
+
+  #topnav {
+    min-height: 20px;
+  }
+}

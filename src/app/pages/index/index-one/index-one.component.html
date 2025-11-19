@@ -1,0 +1,122 @@
+<app-navbar2></app-navbar2>
+
+<section class="bg-half-170 d-table w-100 bg-primary hero-video-section navbar-compensated" style="position: relative;">
+    <!-- Video de fondo (capa 1 - más atrás) -->
+        <video #backgroundVideo 
+            class="background-video" 
+            muted 
+            loop 
+            playsinline 
+            preload="auto"
+            autoplay
+            [attr.webkit-playsinline]="true">
+            <source src="assets/videos/video.mp4" type="video/mp4">
+            
+        </video>
+
+        
+   
+    
+    <!-- Fondo transparente encima del video (capa 2) -->
+    <div class="video-overlay"></div>
+    
+    <!-- Contenido original (capa 3 - al frente) -->
+    <div class="hero-content">
+        <div class="container">
+            <div class="row g-4 align-items-center">
+                <div class="col-md-6">
+                    <div class="title-heading">
+                        <h1 class="heading text-white fw-bold">Sea Contratado <br> por las empresas <br> buscando servicios.</h1>
+                        <p class="para-desc text-white-50 mb-0">Conecta tus Proyectos con Proveedores de Excelencia. Nuestra plataforma facilita la búsqueda de servicios especializados por rubro.</p>
+
+                        <div class="text-center subscribe-form mt-4">
+                            <form style="max-width: 800px;">
+                                <div class="mb-0">
+                                    <div class="position-relative">
+                                        <i data-feather="search" class="fea icon-20 position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+                                        <input type="text" id="help" name="name" class="shadow rounded-pill bg-white ps-5" required="" placeholder="Search jobs & candidates ...">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-pills">Search</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="position-relative ms-lg-5">
+                        <img [src]="'assets/images/hero1.png'" class="img-fluid p-5 imagen-circular" alt="" >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    
+    <div class="container mt-100 mt-60">
+        <div class="row justify-content-center mb-4 pb-2">
+            <div class="col-12">
+                <div class="section-title text-center">
+                    <h4 class="title mb-3">Estas empresas necesitan tu talento</h4>
+                    <p class="text-muted para-desc mx-auto mb-0">Explora todas las partidas disponibles en Perú. Encuentra proveedores especializados y accede a perfiles verificados de más de 5,000+ empresas a nivel nacional.</p>
+                </div>
+            </div>
+        </div>
+        <app-category-one/>
+    </div>
+
+    <div class="container mt-100 mt-60">
+        <div class="row align-items-end mb-4 pb-2">
+            <div class="col-lg-6 col-md-9">
+                <div class="section-title text-md-start text-center">
+                    <h4 class="title mb-3">Explorar Requerimientos</h4>
+                    <p class="text-muted para-desc mb-0">Busca todos los requerimientos de servicios publicados en la web. Postula tus servicios como empresa y revisa las especificaciones de más de 5,000 proyectos en Perú.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-3 d-none d-md-block">
+                <div class="text-md-end">
+                    <a [routerLink]="'/job-grid-one'" class="btn btn-link primary text-muted">Mirar mas Requerimientos <i class="mdi mdi-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <app-explore-job/>
+    </div>
+
+    <div class="container mt-100 mt-60">
+        <div class="row justify-content-center mb-4 pb-2">
+            <div class="col-12">
+                <div class="section-title text-center">
+                    <h4 class="title mb-3">Descubre por qué te encantará Procura</h4>
+                    <p class="text-muted para-desc mx-auto mb-0">Simplifica la búsqueda de servicios estratégicos para tus proyectos. Agiliza tus contrataciones y explora perfiles de miles de proveedores confiables en el mercado peruano.</p>
+                </div>
+            </div>
+        </div>
+
+        <app-feature-one/>
+    </div>
+
+    <div class="container mt-100 mt-60">
+        <app-best-company/>
+    </div>
+
+    <div class="container mt-100 mt-60">
+        <div class="row justify-content-center">
+            <div class="col">
+                <div class="section-title text-center mb-4 pb-2">
+                    <h4 class="title mb-3">Últimas Noticias y Artículos</h4>
+                    <p class="text-muted para-desc mb-0 mx-auto">Mantente al día con las tendencias, innovaciones y casos de éxito del sector de servicios en Perú.</p>
+                </div>
+            </div>
+        </div>
+
+        <app-blog/>
+    </div>
+</section>
+
+<app-footer/>
+
+<app-scroll-to-top/>
