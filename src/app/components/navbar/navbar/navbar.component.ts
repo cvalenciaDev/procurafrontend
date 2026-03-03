@@ -3,6 +3,8 @@ import { Component, HostListener, Input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import * as feather from 'feather-icons'
 import {NgClickOutsideDirective} from 'ng-click-outside2';
+import { AuthService } from '../../../services/auth.service';
+import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'app-navbar',
@@ -25,13 +27,27 @@ export class NavbarComponent {
   subManu:string = '';
   toggleManu:boolean = false
 
-  constructor(private router: Router) {}
+  isLoggedIn = false;
+  needsProfile = false;
+  currentUser: User | null = null;
+
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+  ) {}
 
   ngOnInit() {
     const current = this.router.url;
     this.manu = current
     this.subManu = current
     window.scrollTo(0, 0);
+
+    // Suscribirse al estado del usuario
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+      this.isLoggedIn = this.authService.isLoggedIn();
+      this.needsProfile = this.isLoggedIn && !!user && !user.hasCompanyProfile && !user.hasProviderProfile;
+    });
   }
 
   openManu(item:string){
@@ -64,5 +80,10 @@ export class NavbarComponent {
 
   onClickedOutside2(e: Event) {
     this.userMenu = false
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

@@ -12,8 +12,6 @@ import { SpinnerComponent } from '../../../components/spinner/spinner.component'
   styleUrl: './signup.component.scss',
 })
 export class SignupComponent {
-  step: 'register' | 'selectType' | 'profileForm' = 'register';
-
   usuario = {
     firstName: '',
     lastName: '',
@@ -21,28 +19,7 @@ export class SignupComponent {
     email: '',
     password: '',
     passwordConfirm: '',
-    userType: '',
     phone: '',
-  };
-
-  companyProfile = {
-    companyName: '',
-    rif: '',
-    industry: '',
-    description: '',
-    website: '',
-    phone: '',
-    city: '',
-  };
-
-  providerProfile = {
-    businessName: '',
-    rif: '',
-    specialty: '',
-    description: '',
-    website: '',
-    phone: '',
-    city: '',
   };
 
   strengthLabel = 'Mín. 8 caracteres';
@@ -51,9 +28,6 @@ export class SignupComponent {
   successMsg = '';
   loading = false;
   spinnerMsg = '';
-
-  /** Token obtenido tras registro + auto-login */
-  private authToken = '';
 
   pwdRules = {
     length: false,
@@ -96,8 +70,7 @@ export class SignupComponent {
     return Object.values(this.pwdRules).every(Boolean);
   }
 
-  /** STEP 1 → Registra en BD + auto-login → pasa a selección de tipo */
-  goToSelectType(): void {
+  onRegister(): void {
     this.errorMsg = '';
     this.successMsg = '';
 
@@ -119,36 +92,24 @@ export class SignupComponent {
       return;
     }
 
-    // Llamada al backend: registrar cuenta
     this.loading = true;
     this.spinnerMsg = 'Creando tu cuenta...';
 
-    const registerPayload = {
-      firstName: this.usuario.firstName,
-      lastName: this.usuario.lastName,
-      username: this.usuario.username,
-      email: this.usuario.email,
-      password: this.usuario.password,
-      passwordConfirm: this.usuario.passwordConfirm,
-    };
-
-    this.authService.register(registerPayload).subscribe({
+    this.authService.register(this.usuario).subscribe({
       next: (response) => {
         if (response.success && response.data?.accessToken) {
-          // Registro exitoso, ya tenemos el token
-          this.authToken = response.data.accessToken;
+          // Registro exitoso con token → ir a crear perfil
           this.spinnerMsg = 'Cuenta creada, preparando tu perfil...';
           setTimeout(() => {
             this.loading = false;
-            this.successMsg = '¡Cuenta creada exitosamente!';
-            this.step = 'selectType';
+            this.router.navigate(['/create-profile']);
           }, 800);
         } else {
-          // Registro OK pero sin token → hacer login manual
+          // Registro OK pero sin token → hacer login automático
           this.autoLogin();
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         this.loading = false;
         this.errorMsg =
           err.error?.message || 'Error al registrar. Verifica tus datos.';
@@ -156,19 +117,16 @@ export class SignupComponent {
     });
   }
 
-  /** Login automático después del registro si no se recibió token */
   private autoLogin(): void {
     this.spinnerMsg = 'Iniciando sesión...';
 
     this.authService.login(this.usuario.email, this.usuario.password).subscribe({
       next: (response) => {
         if (response.success && response.data?.accessToken) {
-          this.authToken = response.data.accessToken;
           this.spinnerMsg = 'Sesión iniciada, preparando tu perfil...';
           setTimeout(() => {
             this.loading = false;
-            this.successMsg = '¡Cuenta creada exitosamente!';
-            this.step = 'selectType';
+            this.router.navigate(['/create-profile']);
           }, 800);
         } else {
           this.loading = false;
@@ -178,55 +136,6 @@ export class SignupComponent {
       error: () => {
         this.loading = false;
         this.errorMsg = 'Cuenta creada pero no se pudo iniciar sesión. Intenta desde el login.';
-      },
-    });
-  }
-
-  selectUserType(type: 'COMPANY' | 'PROVIDER'): void {
-    this.usuario.userType = type;
-  }
-
-  goToProfileForm(): void {
-    this.errorMsg = '';
-    if (!this.usuario.userType) {
-      this.errorMsg = 'Selecciona un tipo de perfil.';
-      return;
-    }
-    this.step = 'profileForm';
-  }
-
-  /** STEP 3 → Envía perfil al backend con el token */
-  onRegister(): void {
-    this.errorMsg = '';
-    this.successMsg = '';
-
-    const profile =
-      this.usuario.userType === 'COMPANY'
-        ? this.companyProfile
-        : this.providerProfile;
-
-    const payload = {
-      userType: this.usuario.userType,
-      profile,
-    };
-
-    this.loading = true;
-    this.spinnerMsg = 'Guardando tu perfil...';
-
-    // Enviar perfil — el token ya está en localStorage via AuthService
-    this.authService.createProfile(payload).subscribe({
-      next: () => {
-        this.spinnerMsg = '¡Perfil creado exitosamente!';
-        setTimeout(() => {
-          this.loading = false;
-          this.successMsg = '¡Registro completo! Redirigiendo...';
-          setTimeout(() => this.router.navigate(['/jobs']), 1200);
-        }, 800);
-      },
-      error: (err: any) => {
-        this.loading = false;
-        this.errorMsg =
-          err.error?.message || 'Error al guardar el perfil. Inténtalo de nuevo.';
       },
     });
   }

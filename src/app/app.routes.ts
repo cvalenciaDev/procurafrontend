@@ -135,8 +135,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/auth/login/login.component').then(c => c.LoginComponent)
   },
   {
-    path: 'signup', 
+    path: 'signup',
     loadComponent: () => import('./pages/auth/signup/signup.component').then(c => c.SignupComponent)
+  },
+  {
+    path: 'create-profile',
+    loadComponent: () => import('./pages/auth/create-profile/create-profile.component').then(c => c.CreateProfileComponent)
   },
   {
     path: 'reset-password', 

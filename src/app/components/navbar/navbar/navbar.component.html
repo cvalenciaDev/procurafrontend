@@ -21,6 +21,14 @@
         </div>
 
         <ul class="buy-button list-inline mb-0">
+            <!-- Botón "Crear perfil" — solo si está logueado y NO tiene perfil -->
+            <li class="list-inline-item ps-1 mb-0" *ngIf="needsProfile">
+                <a [routerLink]="'/create-profile'" class="btn btn-sm btn-soft-primary rounded-pill d-flex align-items-center gap-1" style="font-size: 13px; font-weight: 600; padding: 6px 16px;">
+                    <i data-feather="user-plus" class="fea icon-sm"></i>
+                    Crear perfil
+                </a>
+            </li>
+
             <li class="list-inline-item ps-1 mb-0">
                 <div class="dropdown" (clickOutside)="onClickedOutside($event)">
                     <button type="button" class="dropdown-toggle btn btn-sm btn-icon btn-pills btn-primary" type="button" (click)="searchMenu = !searchMenu">
@@ -46,10 +54,11 @@
                     </button>
                     <div class="dropdown-menu dd-menu dropdown-menu-end bg-white rounded shadow border-0 mt-3" [ngClass]="userMenu ? 'show' : ''" style=" right: 0;">
                         <a [routerLink]="'/candidate-profile'" class="dropdown-item fw-medium fs-6"><i data-feather="user" class="fea icon-sm me-2 align-middle"></i>Perfil</a>
+                        <a *ngIf="needsProfile" [routerLink]="'/create-profile'" class="dropdown-item fw-medium fs-6"><i data-feather="user-plus" class="fea icon-sm me-2 align-middle"></i>Crear perfil</a>
                         <a [routerLink]="'/candidate-profile-setting'" class="dropdown-item fw-medium fs-6"><i data-feather="settings" class="fea icon-sm me-2 align-middle"></i>Configuración</a>
                         <div class="dropdown-divider border-top"></div>
                         <a [routerLink]="'/lock-screen'" class="dropdown-item fw-medium fs-6"><i data-feather="lock" class="fea icon-sm me-2 align-middle"></i>Bloquear</a>
-                        <a [routerLink]="'/login'" class="dropdown-item fw-medium fs-6"><i data-feather="log-out" class="fea icon-sm me-2 align-middle"></i>Salir sesion</a>
+                        <a [routerLink]="[]" (click)="logout()" class="dropdown-item fw-medium fs-6"><i data-feather="log-out" class="fea icon-sm me-2 align-middle"></i>Salir sesión</a>
                     </div>
                 </div>
             </li>

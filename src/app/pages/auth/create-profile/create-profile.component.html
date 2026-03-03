@@ -1,0 +1,478 @@
+<!-- Spinner overlay -->
+<app-spinner *ngIf="loading" [message]="spinnerMsg"></app-spinner>
+
+<div class="bg-overlay"></div>
+
+<div class="page">
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="logo-block">
+      <div class="logo-container">
+        <img
+          src="assets/images/logos/logo-white.png"
+          alt="Procura"
+          class="logo-img"
+        />
+      </div>
+    </div>
+    <h1 class="headline">
+      Completa tu<br />perfil en
+      <span class="line-gradient">Procura</span>
+    </h1>
+    <p class="sub-text">
+      Un perfil completo te ayuda a conectar más rápido con las mejores
+      oportunidades de negocio.
+    </p>
+    <div class="features">
+      <div class="feature-pill">
+        <div class="pill-icon blue">🏢</div>
+        <div class="pill-content">
+          <strong>Empresas</strong>
+          <span>Publica proyectos y encuentra proveedores</span>
+        </div>
+      </div>
+      <div class="feature-pill">
+        <div class="pill-icon cyan">🤝</div>
+        <div class="pill-content">
+          <strong>Proveedores</strong>
+          <span>Conecta con empresas y consigue contratos</span>
+        </div>
+      </div>
+      <div class="feature-pill">
+        <div class="pill-icon violet">⚡</div>
+        <div class="pill-content">
+          <strong>Rápido y seguro</strong>
+          <span>Tu información protegida siempre</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- STEP 1: SELECCIÓN DE TIPO -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="form-card profile-step" *ngIf="step === 'selectType'">
+    <div class="card-header profile-header">
+      <div class="profile-icon-main">👋</div>
+      <h2>¡Hola, {{ userName }}!</h2>
+      <p>Selecciona tu tipo de perfil para personalizar tu experiencia</p>
+    </div>
+
+    <!-- Steps indicator -->
+    <div class="steps-indicator">
+      <div class="step-dot completed">✓</div>
+      <div class="step-line filled"></div>
+      <div class="step-dot active"></div>
+      <div class="step-line"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <div class="alert-error" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+    <div class="profile-options">
+      <div
+        class="profile-card"
+        [class.selected]="userType === 'COMPANY'"
+        (click)="selectUserType('COMPANY')"
+      >
+        <div class="profile-card-icon blue">🏢</div>
+        <div class="profile-card-body">
+          <strong>Empresa</strong>
+          <span
+            >Busco proveedores para mi empresa. Quiero publicar proyectos y
+            encontrar los mejores servicios.</span
+          >
+        </div>
+        <div class="profile-card-check">
+          <span *ngIf="userType === 'COMPANY'">✓</span>
+        </div>
+      </div>
+
+      <div
+        class="profile-card"
+        [class.selected]="userType === 'PROVIDER'"
+        (click)="selectUserType('PROVIDER')"
+      >
+        <div class="profile-card-icon violet">🤝</div>
+        <div class="profile-card-body">
+          <strong>Proveedor</strong>
+          <span
+            >Ofrezco servicios profesionales. Quiero conectar con empresas y
+            conseguir nuevos contratos.</span
+          >
+        </div>
+        <div class="profile-card-check">
+          <span *ngIf="userType === 'PROVIDER'">✓</span>
+        </div>
+      </div>
+    </div>
+
+    <button
+      class="btn-submit"
+      [class.disabled]="!userType"
+      [disabled]="!userType"
+      (click)="goToProfileForm()"
+    >
+      Crear mi perfil <span class="btn-arrow">→</span>
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- STEP 2: FORMULARIO EMPRESA -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div
+    class="form-card profile-form-step"
+    *ngIf="step === 'profileForm' && userType === 'COMPANY'"
+  >
+    <button class="btn-back" (click)="step = 'selectType'">← Volver</button>
+
+    <div class="card-header profile-header">
+      <div class="profile-icon-main">🏢</div>
+      <h2>Perfil de Empresa</h2>
+      <p>Cuéntanos sobre tu empresa para conectarte con los mejores proveedores</p>
+    </div>
+
+    <!-- Steps indicator -->
+    <div class="steps-indicator">
+      <div class="step-dot completed">✓</div>
+      <div class="step-line filled"></div>
+      <div class="step-dot completed">✓</div>
+      <div class="step-line filled"></div>
+      <div class="step-dot active"></div>
+    </div>
+
+    <div class="alert-error" *ngIf="errorMsg">{{ errorMsg }}</div>
+    <div class="alert-success" *ngIf="successMsg">{{ successMsg }}</div>
+
+    <form (ngSubmit)="onSubmitProfile()">
+      <div class="fg">
+        <label>Nombre de la empresa *</label>
+        <div class="inp-wrap">
+          <span class="inp-icon">🏢</span>
+          <input type="text" class="fc" placeholder="Constructora ABC SAC"
+            [(ngModel)]="companyProfile.companyName" name="companyName" required />
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Descripción *</label>
+        <textarea class="fc fc-textarea" placeholder="Empresa líder en construcción de infraestructura..."
+          [(ngModel)]="companyProfile.description" name="description" rows="3"></textarea>
+      </div>
+
+      <div class="row-2">
+        <div class="fg">
+          <label>Industria / Sector *</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">⚙</span>
+            <input type="text" class="fc" placeholder="Construcción"
+              [(ngModel)]="companyProfile.industry" name="industry" />
+          </div>
+        </div>
+        <div class="fg">
+          <label>Especialidad</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">🎯</span>
+            <input type="text" class="fc" placeholder="Ingeniería Civil"
+              [(ngModel)]="companyProfile.specialty" name="specialty" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="fg">
+          <label>Ciudad *</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">📍</span>
+            <input type="text" class="fc" placeholder="Lima"
+              [(ngModel)]="companyProfile.city" name="city" />
+          </div>
+        </div>
+        <div class="fg">
+          <label>País *</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">🌎</span>
+            <input type="text" class="fc" placeholder="Perú"
+              [(ngModel)]="companyProfile.country" name="country" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="fg">
+          <label>Email de contacto *</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">✉</span>
+            <input type="email" class="fc" placeholder="contacto@empresa.com"
+              [(ngModel)]="companyProfile.contactEmail" name="contactEmail" />
+          </div>
+        </div>
+        <div class="fg">
+          <label>Teléfono de contacto *</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">📞</span>
+            <input type="tel" class="fc" placeholder="+51 999 888 777"
+              [(ngModel)]="companyProfile.contactPhone" name="contactPhone" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="fg">
+          <label>RUC / Tax ID</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">📋</span>
+            <input type="text" class="fc" placeholder="20505050505"
+              [(ngModel)]="companyProfile.taxId" name="taxId" />
+          </div>
+        </div>
+        <div class="fg">
+          <label>Año de fundación</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">📅</span>
+            <input type="number" class="fc" placeholder="2010"
+              [(ngModel)]="companyProfile.foundedYear" name="foundedYear" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="fg">
+          <label>Cantidad de empleados</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">👥</span>
+            <input type="number" class="fc" placeholder="150"
+              [(ngModel)]="companyProfile.employeesCount" name="employeesCount" />
+          </div>
+        </div>
+        <div class="fg">
+          <label>Capacidad máxima</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">📊</span>
+            <input type="number" class="fc" placeholder="15"
+              [(ngModel)]="companyProfile.maxCapacity" name="maxCapacity" />
+          </div>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Sitio web</label>
+        <div class="inp-wrap">
+          <span class="inp-icon">🌐</span>
+          <input type="url" class="fc" placeholder="https://constructorabc.com"
+            [(ngModel)]="companyProfile.website" name="website" />
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="fg">
+          <label>Dirección</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">🏠</span>
+            <input type="text" class="fc" placeholder="Av. Aviación 123, Lima"
+              [(ngModel)]="companyProfile.address" name="address" />
+          </div>
+        </div>
+        <div class="fg">
+          <label>Dirección fiscal</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">📄</span>
+            <input type="text" class="fc" placeholder="Av. Aviación 123, Lima 15047"
+              [(ngModel)]="companyProfile.fiscalAddress" name="fiscalAddress" />
+          </div>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Presencia internacional</label>
+        <div class="inp-wrap">
+          <span class="inp-icon">🌍</span>
+          <input type="text" class="fc" placeholder="Perú, Chile, Colombia, Ecuador"
+            [(ngModel)]="companyProfile.internationalPresence" name="internationalPresence" />
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Proyectos completados</label>
+        <div class="inp-wrap">
+          <span class="inp-icon">✅</span>
+          <input type="text" class="fc" placeholder="80+ proyectos completados"
+            [(ngModel)]="companyProfile.completedProjects" name="completedProjects" />
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Logo URL</label>
+        <div class="inp-wrap">
+          <span class="inp-icon">🖼</span>
+          <input type="url" class="fc" placeholder="https://example.com/logo.png"
+            [(ngModel)]="companyProfile.logo" name="logo" />
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="loading">
+        Completar perfil <span class="btn-arrow">→</span>
+      </button>
+    </form>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- STEP 2: FORMULARIO PROVEEDOR -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div
+    class="form-card profile-form-step"
+    *ngIf="step === 'profileForm' && userType === 'PROVIDER'"
+  >
+    <button class="btn-back" (click)="step = 'selectType'">← Volver</button>
+
+    <div class="card-header profile-header">
+      <div class="profile-icon-main">🤝</div>
+      <h2>Perfil de Proveedor</h2>
+      <p>Cuéntanos sobre tus servicios para conectarte con empresas</p>
+    </div>
+
+    <!-- Steps indicator -->
+    <div class="steps-indicator">
+      <div class="step-dot completed">✓</div>
+      <div class="step-line filled"></div>
+      <div class="step-dot completed">✓</div>
+      <div class="step-line filled"></div>
+      <div class="step-dot active"></div>
+    </div>
+
+    <div class="alert-error" *ngIf="errorMsg">{{ errorMsg }}</div>
+    <div class="alert-success" *ngIf="successMsg">{{ successMsg }}</div>
+
+    <form (ngSubmit)="onSubmitProfile()">
+      <div class="fg">
+        <label>Nombre del negocio *</label>
+        <div class="inp-wrap">
+          <span class="inp-icon">🤝</span>
+          <input type="text" class="fc" placeholder="Materiales del Sur SAC"
+            [(ngModel)]="providerProfile.providerName" name="providerName" required />
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Descripción *</label>
+        <textarea class="fc fc-textarea" placeholder="Proveedor especializado en materiales de construcción..."
+          [(ngModel)]="providerProfile.description" name="description" rows="3"></textarea>
+      </div>
+
+      <div class="row-2">
+        <div class="fg">
+          <label>Especialidad *</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">🎯</span>
+            <input type="text" class="fc" placeholder="Materiales de Construcción"
+              [(ngModel)]="providerProfile.specialty" name="specialty" />
+          </div>
+        </div>
+        <div class="fg">
+          <label>Servicios *</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">⚙</span>
+            <input type="text" class="fc" placeholder="Cemento, Acero, Arena, Grava"
+              [(ngModel)]="providerProfile.services" name="services" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="fg">
+          <label>Ciudad *</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">📍</span>
+            <input type="text" class="fc" placeholder="Arequipa"
+              [(ngModel)]="providerProfile.city" name="city" />
+          </div>
+        </div>
+        <div class="fg">
+          <label>País *</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">🌎</span>
+            <input type="text" class="fc" placeholder="Perú"
+              [(ngModel)]="providerProfile.country" name="country" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="fg">
+          <label>Email de contacto *</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">✉</span>
+            <input type="email" class="fc" placeholder="contacto@proveedor.com"
+              [(ngModel)]="providerProfile.contactEmail" name="contactEmail" />
+          </div>
+        </div>
+        <div class="fg">
+          <label>Teléfono de contacto *</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">📞</span>
+            <input type="tel" class="fc" placeholder="+51 952 123 456"
+              [(ngModel)]="providerProfile.contactPhone" name="contactPhone" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="fg">
+          <label>WhatsApp</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">💬</span>
+            <input type="tel" class="fc" placeholder="+51 952 123 456"
+              [(ngModel)]="providerProfile.whatsappNumber" name="whatsappNumber" />
+          </div>
+        </div>
+        <div class="fg">
+          <label>Años de experiencia</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">📅</span>
+            <input type="number" class="fc" placeholder="20"
+              [(ngModel)]="providerProfile.experienceYears" name="experienceYears" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="fg">
+          <label>Tarifa por hora (USD)</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">💲</span>
+            <input type="number" class="fc" placeholder="75.50" step="0.01"
+              [(ngModel)]="providerProfile.hourlyRate" name="hourlyRate" />
+          </div>
+        </div>
+        <div class="fg">
+          <label>Cantidad de trabajadores</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">👥</span>
+            <input type="number" class="fc" placeholder="45"
+              [(ngModel)]="providerProfile.workersCount" name="workersCount" />
+          </div>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>URL del brochure</label>
+        <div class="inp-wrap">
+          <span class="inp-icon">📎</span>
+          <input type="url" class="fc" placeholder="https://example.com/brochure.pdf"
+            [(ngModel)]="providerProfile.brochureUrl" name="brochureUrl" />
+        </div>
+      </div>
+
+      <div class="fg available-toggle">
+        <label>
+          <input type="checkbox" [(ngModel)]="providerProfile.isAvailable" name="isAvailable" />
+          Disponible para nuevos proyectos
+        </label>
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="loading">
+        Completar perfil <span class="btn-arrow">→</span>
+      </button>
+    </form>
+  </div>
+</div>
