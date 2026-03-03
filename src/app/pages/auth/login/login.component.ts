@@ -6,13 +6,9 @@ import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [
-    CommonModule,
-    RouterLink,
-    FormsModule
-  ],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
 })
 export class LoginComponent {
   email = '';
@@ -22,26 +18,23 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
 
   onLogin(): void {
     this.loading = true;
     this.error = '';
-    
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
-        console.log(' Login exitoso', response);
         this.router.navigate(['/job-list-one']);
       },
       error: (err) => {
-        console.error(' Error login', err);
         this.error = err.error?.message || 'Error al iniciar sesión';
         this.loading = false;
       },
       complete: () => {
         this.loading = false;
-      }
+      },
     });
   }
 }

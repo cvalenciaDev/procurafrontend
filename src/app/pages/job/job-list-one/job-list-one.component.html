@@ -1,100 +1,122 @@
-<app-navbar/>
+<app-navbar />
 
-<section class="bg-half-170 d-table w-100" style="background: url('assets/images/hero/bg.jpg');">
-    <div class="bg-overlay bg-gradient-overlay"></div>
-    <div class="container">
-        <div class="row mt-5 justify-content-center">
-            <div class="col-12">
-                <div class="title-heading text-center">
-                    <h5 class="heading fw-semibold mb-0 sub-heading text-white title-dark">Requerimientos</h5>
-                </div>
-            </div>
+<section
+  class="bg-half-170 d-table w-100"
+  style="background: url(&quot;assets/images/hero/bg.jpg&quot;)"
+>
+  <div class="bg-overlay bg-gradient-overlay"></div>
+  <div class="container">
+    <div class="row mt-5 justify-content-center">
+      <div class="col-12">
+        <div class="title-heading text-center">
+          <h5
+            class="heading fw-semibold mb-0 sub-heading text-white title-dark"
+          >
+            Requerimientos
+          </h5>
         </div>
+      </div>
     </div>
+  </div>
 </section>
 <div class="position-relative">
-    <div class="shape overflow-hidden text-white">
-        <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
-        </svg>
-    </div>
+  <div class="shape overflow-hidden text-white">
+    <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z"
+        fill="currentColor"
+      ></path>
+    </svg>
+  </div>
 </div>
 
 <section class="section">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 mt-4">
-                <div class="features-absolute">
-                    <app-form-one/>
-                </div>
-            </div>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 mt-4">
+        <div class="features-absolute">
+          <app-form-one />
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-60">
+    <!-- Resultados header con paginación -->
+    <div class="results-header" *ngIf="jobData.length">
+      <span class="results-count">
+        Mostrando <strong>{{ (currentPage - 1) * itemsPerPage + 1 }}-{{ currentPage * itemsPerPage > jobData.length ? jobData.length : currentPage * itemsPerPage }}</strong> de <strong>{{ jobData.length }}</strong> requerimientos
+      </span>
+      <div class="pagination-wrapper" *ngIf="totalPages > 1">
+        <button class="pg-btn pg-nav" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+          <i class="mdi mdi-chevron-left"></i>
+        </button>
+        <button
+          *ngFor="let page of pages"
+          class="pg-btn"
+          [class.pg-active]="page === currentPage"
+          (click)="goToPage(page)"
+        >{{ page }}</button>
+        <button class="pg-btn pg-nav" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
+          <i class="mdi mdi-chevron-right"></i>
+        </button>
+      </div>
     </div>
 
-    <div class="container mt-60">
-        <div class="row g-4">
-            <div *ngFor="let item of jobData" class="col-12">
-                <div class="job-post job-post-list rounded shadow p-4 d-md-flex align-items-center justify-content-between position-relative">
-                    <div class="d-flex align-items-center w-310px">
-                        <img [src]="item.image" class="avatar avatar-small rounded shadow p-3 bg-white" alt="">
-
-                        <div class="ms-3">
-                            <a [routerLink]="['/job-detail-one',item.id]" class="h5 title text-dark">{{item.title}}</a>
-                        </div>
-                    </div>
-
-                    <div class="d-flex align-items-center justify-content-between d-md-block mt-3 mt-md-0 w-100px">
-                        <span class="badge bg-soft-primary rounded-pill">{{item.jobType}}</span>
-                        <span class="text-muted d-flex align-items-center fw-medium mt-md-2"><i data-feather="clock" class="fea icon-sm me-1 align-middle"></i>{{item.posted}}</span>
-                    </div>
-
-                    <div class="d-flex align-items-center justify-content-between d-md-block mt-2 mt-md-0 w-130px">
-                        <span class="text-muted d-flex align-items-center"><i data-feather="map-pin" class="fea icon-sm me-1 align-middle"></i>{{item.location}}</span>
-                        <span class="d-flex fw-medium mt-md-2">{{item.salary}}</span>
-                    </div>
-
-                    <div class="mt-3 mt-md-0">
-                        <a [routerLink]="[]" class="btn btn-sm btn-icon btn-pills btn-soft-primary bookmark"><i data-feather="bookmark" class="icons"></i></a>
-                        <a [routerLink]="['/job-detail-one',item.id]" class="btn btn-sm btn-primary w-full ms-md-1">Apply Now</a>
-                    </div>
-                </div>
+    <!-- Lista de requerimientos -->
+    <div class="req-list">
+      <div *ngFor="let item of paginatedData; let i = index" class="req-item" [style.animation-delay]="(i * 60) + 'ms'">
+        <div class="req-left">
+          <div class="req-icon" [style.background]="getCategoryColor(item.category) + '15'" [style.border-color]="getCategoryColor(item.category) + '30'">
+            <i class="mdi" [ngClass]="getCategoryIcon(item.category)" [style.color]="getCategoryColor(item.category)"></i>
+          </div>
+          <div class="req-info">
+            <a [routerLink]="['/job-detail-one', item.id]" class="req-title">{{ item.title }}</a>
+            <div class="req-meta">
+              <span class="req-meta-item">
+                <i class="mdi mdi-map-marker-outline"></i> {{ item.location }}
+              </span>
+              <span class="req-meta-item">
+                <i class="mdi mdi-calendar-outline"></i> {{ item.deadline | date:'dd MMM yyyy' }}
+              </span>
             </div>
+          </div>
         </div>
 
-        <div class="row">
-            <div class="col-12 mt-4 pt-2">
-                <ul class="pagination justify-content-center mb-0">
-                    <li class="page-item">
-                        <a class="page-link" [routerLink]="[]" aria-label="Previous">
-                            <span aria-hidden="true"><i class="mdi mdi-chevron-left fs-6"></i></span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" [routerLink]="[]">1</a></li>
-                    <li class="page-item active"><a class="page-link" [routerLink]="[]">2</a></li>
-                    <li class="page-item"><a class="page-link" [routerLink]="[]">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" [routerLink]="[]" aria-label="Next">
-                            <span aria-hidden="true"><i class="mdi mdi-chevron-right fs-6"></i></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+        <div class="req-center">
+          <span class="req-badge" [class.urgent]="item.status === 'Urgente'">{{ item.category }}</span>
+          <span class="req-status" [class.status-urgent]="item.status === 'Urgente'">
+            <i class="mdi" [class.mdi-circle-small]="item.status === 'Abierto'" [class.mdi-alert-circle-outline]="item.status === 'Urgente'"></i>
+            {{ item.status }}
+          </span>
         </div>
+
+        <div class="req-right">
+          <span class="req-budget">S/. {{ item.budgetMin | number:'1.0-0' }} - {{ item.budgetMax | number:'1.0-0' }}</span>
+          <a [routerLink]="['/job-detail-one', item.id]" class="req-btn">Ver Detalles <i class="mdi mdi-arrow-right"></i></a>
+        </div>
+      </div>
     </div>
 
-    <div class="container mt-100 mt-60">
-        <div class="row justify-content-center mb-4 pb-2">
-            <div class="col-12">
-                <div class="section-title text-center">
-                    <h4 class="title mb-3">Aqui sabras porque te gusta Procura</h4>
-                    <p class="text-muted para-desc mx-auto mb-0">Accede a una amplia red de proveedores calificados en Perú. Descubre el valor de mercado de los servicios y explora perfiles detallados de miles de empresas a nivel nacional.</p>
-                </div>
-            </div>
+  </div>
+
+  <div class="container mt-100 mt-60">
+    <div class="row justify-content-center mb-4 pb-2">
+      <div class="col-12">
+        <div class="section-title text-center">
+          <h4 class="title mb-3">Aqui sabras porque te gusta Procura</h4>
+          <p class="text-muted para-desc mx-auto mb-0">
+            Accede a una amplia red de proveedores calificados en Perú. Descubre
+            el valor de mercado de los servicios y explora perfiles detallados
+            de miles de empresas a nivel nacional.
+          </p>
         </div>
-        <app-feature-one/>
+      </div>
     </div>
+    <app-feature-one />
+  </div>
 </section>
 
-<app-footer-top/>
+<app-footer-top />
 
-<app-scroll-to-top/>
+<app-scroll-to-top />

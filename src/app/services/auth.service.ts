@@ -43,6 +43,10 @@ export class AuthService {
     return this.http.get<ApiResponse<User>>(`${this.apiUrl}/auth/profile`);
   }
 
+  createProfile(data: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/profile`, data);
+  }
+
   loadProfile(): void {
     this.getProfile().subscribe({
       next: (response) => {
