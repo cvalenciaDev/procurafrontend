@@ -1,33 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { NavbarComponent } from "../../../components/navbar/navbar/navbar.component";
-import { companyData, jobData } from '../../../data/data';
 import { FooterTopComponent } from "../../../components/footer-top/footer-top.component";
 import { ScrollToTopComponent } from "../../../components/scroll-to-top/scroll-to-top.component";
-
-interface JobData{
-    id: number;
-    image: string;
-    name: string;
-    posted: string;
-    jobType: string;
-    title: string;
-    location: string;
-    applied: number;
-    vacancy: number;
-    salary: string;
-    desc: string;
-}
-
-interface CompanyData{
-    id: number;
-    image: string;
-    name: string;
-    desc: string;
-    loction: string;
-    jobs: number;
-}
+import { SpinnerComponent } from '../../../components/spinner/spinner.component';
+import { CompanyService, CompanyProfile } from '../../../services/company.service';
 
 @Component({
   selector: 'app-employer-profile',
@@ -36,23 +14,29 @@ interface CompanyData{
     RouterLink,
     NavbarComponent,
     FooterTopComponent,
-    ScrollToTopComponent
-],
+    ScrollToTopComponent,
+    SpinnerComponent,
+  ],
   templateUrl: './employer-profile.component.html',
   styleUrl: './employer-profile.component.scss'
 })
-export class EmployerProfileComponent {
-  jobData:JobData[] = jobData
+export class EmployerProfileComponent implements OnInit {
+  company: CompanyProfile | null = null;
+  loading = true;
+  error = '';
 
-  companyData:CompanyData[] = companyData
-
-  data:any
-  id:any
-
-  constructor(private router:ActivatedRoute){}
+  constructor(private readonly companyService: CompanyService) {}
 
   ngOnInit(): void {
-    this.id = this.router.snapshot.params['id']
-    this.data = this.companyData.find(item => item.id === parseInt(this.id))
+    this.companyService.getMyProfile().subscribe({
+      next: (res) => {
+        this.company = res.data;
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'No se pudo cargar el perfil de empresa.';
+        this.loading = false;
+      }
+    });
   }
 }

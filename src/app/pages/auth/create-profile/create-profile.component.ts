@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { CompanyService, CompanyProfile } from '../../../services/company.service';
 import { ProviderService, ProviderProfile } from '../../../services/provider.service';
@@ -68,6 +68,7 @@ export class CreateProfileComponent {
     private companyService: CompanyService,
     private providerService: ProviderService,
     private router: Router,
+    private route: ActivatedRoute,
   ) {
     // Verificar que el usuario esté logueado
     if (!this.authService.isLoggedIn()) {
@@ -84,11 +85,24 @@ export class CreateProfileComponent {
       this.providerProfile.contactEmail = user.email;
     }
 
-    // Si ya tiene primaryType, saltar selección e ir directo al formulario faltante
+    // Leer query param ?type= (viene del botón del navbar para agregar segundo perfil)
+    const typeParam = this.route.snapshot.queryParamMap.get('type') as 'COMPANY' | 'PROVIDER' | null;
+    if (typeParam === 'COMPANY' || typeParam === 'PROVIDER') {
+      // Si ya tiene ese tipo de perfil, redirigir al home
+      if ((typeParam === 'COMPANY' && user?.hasCompanyProfile) ||
+          (typeParam === 'PROVIDER' && user?.hasProviderProfile)) {
+        this.router.navigate(['/job-list-one']);
+        return;
+      }
+      this.userType = typeParam;
+      this.step = 'profileForm';
+      return;
+    }
+
+    // Sin query param: lógica original para primer perfil (basada en primaryType)
     if (user?.primaryType) {
       this.userType = user.primaryType;
 
-      // Si ya tiene el perfil de ese tipo, redirigir al home
       if (
         (user.primaryType === 'COMPANY' && user.hasCompanyProfile) ||
         (user.primaryType === 'PROVIDER' && user.hasProviderProfile)
@@ -97,7 +111,6 @@ export class CreateProfileComponent {
         return;
       }
 
-      // Ir directo al formulario del perfil faltante
       this.step = 'profileForm';
     }
   }
@@ -137,11 +150,31 @@ export class CreateProfileComponent {
 
   private onProfileSuccess(): void {
     this.spinnerMsg = '¡Perfil creado exitosamente!';
-    setTimeout(() => {
-      this.loading = false;
-      this.successMsg = '¡Perfil creado! Redirigiendo...';
-      setTimeout(() => this.router.navigate(['/job-list-one']), 1200);
-    }, 800);
+    // El tipo recién creado se convierte en el activo
+    const targetType = this.userType as 'COMPANY' | 'PROVIDER';
+
+    this.authService.updateUserType(targetType).subscribe({
+      next: () => {
+        // Validar con /companies/my y /providers/my para actualizar hasCompanyProfile/hasProviderProfile
+        this.authService.refreshUserProfiles().subscribe({
+          next: () => {
+            setTimeout(() => {
+              this.loading = false;
+              this.successMsg = '¡Perfil creado! Redirigiendo...';
+              setTimeout(() => this.router.navigate(['/job-list-one']), 1200);
+            }, 800);
+          },
+          error: () => {
+            this.loading = false;
+            this.router.navigate(['/job-list-one']);
+          }
+        });
+      },
+      error: () => {
+        this.loading = false;
+        this.router.navigate(['/job-list-one']);
+      }
+    });
   }
 
   private onProfileError(err: any): void {

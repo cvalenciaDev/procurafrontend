@@ -5,13 +5,15 @@ import * as feather from 'feather-icons'
 import {NgClickOutsideDirective} from 'ng-click-outside2';
 import { AuthService } from '../../../services/auth.service';
 import { User } from '../../../models/user.model';
+import { SpinnerComponent } from '../../spinner/spinner.component';
 
 @Component({
   selector: 'app-navbar',
   imports: [
     CommonModule,
     RouterLink,
-    NgClickOutsideDirective
+    NgClickOutsideDirective,
+    SpinnerComponent
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
@@ -29,6 +31,9 @@ export class NavbarComponent {
 
   isLoggedIn = false;
   needsProfile = false;
+  missingProfileType: 'COMPANY' | 'PROVIDER' | null = null;
+  hasBothProfiles = false;
+  switchingType = false;
   currentUser: User | null = null;
 
   constructor(
@@ -46,7 +51,17 @@ export class NavbarComponent {
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
       this.isLoggedIn = this.authService.isLoggedIn();
+      // needsProfile: sin ningún perfil (para el botón de header global)
       this.needsProfile = this.isLoggedIn && !!user && !user.hasCompanyProfile && !user.hasProviderProfile;
+      this.hasBothProfiles = !!user?.hasCompanyProfile && !!user?.hasProviderProfile;
+      // Tipo de perfil faltante cuando tiene exactamente uno
+      if (user && user.hasProviderProfile && !user.hasCompanyProfile) {
+        this.missingProfileType = 'COMPANY';
+      } else if (user && user.hasCompanyProfile && !user.hasProviderProfile) {
+        this.missingProfileType = 'PROVIDER';
+      } else {
+        this.missingProfileType = null;
+      }
     });
   }
 
@@ -80,6 +95,20 @@ export class NavbarComponent {
 
   onClickedOutside2(e: Event) {
     this.userMenu = false
+  }
+
+  switchUserType(): void {
+    if (!this.currentUser || this.switchingType) return;
+    const target: 'COMPANY' | 'PROVIDER' =
+      this.currentUser.primaryType === 'PROVIDER' ? 'COMPANY' : 'PROVIDER';
+    this.switchingType = true;
+    this.authService.updateUserType(target).subscribe({
+      next: () => {
+        this.switchingType = false;
+        this.router.navigate(['/job-list-one']);
+      },
+      error: () => { this.switchingType = false; }
+    });
   }
 
   logout(): void {

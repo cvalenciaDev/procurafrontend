@@ -36,24 +36,36 @@ export class LoginComponent {
           const user = response.data.user;
           this.spinnerMsg = 'Verificando tu perfil...';
 
-          // Verificar si tiene perfil creado
+          // Sin ningún perfil → forzar creación de perfil
           if (!user.hasCompanyProfile && !user.hasProviderProfile) {
-            // No tiene perfil → redirigir a crear perfil
             this.spinnerMsg = 'Redirigiendo a crear tu perfil...';
             setTimeout(() => {
               this.showSpinner = false;
               this.loading = false;
               this.router.navigate(['/create-profile']);
             }, 1000);
-          } else {
-            // Tiene perfil → ir al dashboard
-            this.spinnerMsg = '¡Bienvenido de vuelta!';
-            setTimeout(() => {
+            return;
+          }
+
+          // Validar perfiles via API y luego determinar tipo activo
+          const targetType: 'COMPANY' | 'PROVIDER' = user.hasProviderProfile ? 'PROVIDER' : 'COMPANY';
+          this.authService.updateUserType(targetType).subscribe({
+            next: () => {
+              // Validar con /companies/my y /providers/my para actualizar el estado
+              this.authService.refreshUserProfiles().subscribe();
+              this.spinnerMsg = '¡Bienvenido de vuelta!';
+              setTimeout(() => {
+                this.showSpinner = false;
+                this.loading = false;
+                this.router.navigate(['/job-list-one']);
+              }, 800);
+            },
+            error: () => {
               this.showSpinner = false;
               this.loading = false;
               this.router.navigate(['/job-list-one']);
-            }, 800);
-          }
+            }
+          });
         } else {
           this.showSpinner = false;
           this.loading = false;

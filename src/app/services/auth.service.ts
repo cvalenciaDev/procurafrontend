@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { Observable, BehaviorSubject, tap, forkJoin, catchError, of, map } from 'rxjs';
 import { environment } from '../../environments/environments';
 import { ApiResponse, AuthResponse, User } from '../models/user.model';
 
@@ -69,6 +69,48 @@ export class AuthService {
 
   private setToken(token: string): void {
     localStorage.setItem('accessToken', token);
+  }
+
+  refreshUserProfiles(): Observable<void> {
+    return forkJoin({
+      company: this.http.get<ApiResponse<any>>(`${this.apiUrl}/companies/my`).pipe(
+        catchError(() => of(null))
+      ),
+      provider: this.http.get<ApiResponse<any>>(`${this.apiUrl}/providers/my`).pipe(
+        catchError(() => of(null))
+      )
+    }).pipe(
+      tap(({ company, provider }) => {
+        const current = this.currentUserSubject.value;
+        if (current) {
+          this.currentUserSubject.next({
+            ...current,
+            hasCompanyProfile: !!company?.success,
+            hasProviderProfile: !!provider?.success
+          });
+        }
+      }),
+      map(() => void 0)
+    );
+  }
+
+  updateUserType(userType: 'COMPANY' | 'PROVIDER'): Observable<ApiResponse<any>> {
+    return this.http.put<ApiResponse<any>>(`${this.apiUrl}/users/me/type`, { userType }).pipe(
+      tap(() => {
+        const current = this.currentUserSubject.value;
+        if (current) {
+          this.currentUserSubject.next({ ...current, primaryType: userType });
+        }
+      })
+    );
+  }
+
+  forgotPassword(email: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/forgot-password`, { email });
+  }
+
+  resetPassword(token: string, newPassword: string, newPasswordConfirm: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/reset-password`, { token, newPassword, newPasswordConfirm });
   }
 
   isLoggedIn(): boolean {

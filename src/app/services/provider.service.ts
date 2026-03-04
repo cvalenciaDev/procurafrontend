@@ -19,6 +19,11 @@ export interface ProviderProfile {
   workersCount: number | null;
   whatsappNumber: string;
   brochureUrl: string;
+  certifications?: string;
+  logo?: string;
+  website?: string;
+  address?: string;
+  clientsList?: string;
 }
 
 @Injectable({
@@ -31,5 +36,9 @@ export class ProviderService {
 
   create(data: ProviderProfile): Observable<ApiResponse<any>> {
     return this.http.post<ApiResponse<any>>(this.apiUrl, data);
+  }
+
+  getMyProfile(): Observable<ApiResponse<ProviderProfile>> {
+    return this.http.get<ApiResponse<ProviderProfile>>(`${this.apiUrl}/my`);
   }
 }

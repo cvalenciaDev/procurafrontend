@@ -143,8 +143,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/auth/create-profile/create-profile.component').then(c => c.CreateProfileComponent)
   },
   {
-    path: 'reset-password', 
+    path: 'reset-password',
     loadComponent: () => import('./pages/auth/reset-password/reset-password.component').then(c => c.ResetPasswordComponent)
+  },
+  {
+    path: 'new-password',
+    loadComponent: () => import('./pages/auth/new-password/new-password.component').then(c => c.NewPasswordComponent)
   },
   {
     path: 'lock-screen', 

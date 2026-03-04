@@ -23,6 +23,7 @@ export interface CompanyProfile {
   completedProjects: string;
   fiscalAddress: string;
   maxCapacity: number | null;
+  brochureUrl?: string;
 }
 
 @Injectable({
@@ -35,5 +36,9 @@ export class CompanyService {
 
   create(data: CompanyProfile): Observable<ApiResponse<any>> {
     return this.http.post<ApiResponse<any>>(this.apiUrl, data);
+  }
+
+  getMyProfile(): Observable<ApiResponse<CompanyProfile>> {
+    return this.http.get<ApiResponse<CompanyProfile>>(`${this.apiUrl}/my`);
   }
 }
