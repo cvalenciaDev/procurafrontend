@@ -31,33 +31,16 @@ export class CandidateProfileSettingComponent implements OnInit {
     phone: '',
   };
 
-  passwords = {
-    oldPassword: '',
-    newPassword: '',
-    newPasswordConfirm: '',
-  };
-
   loading = false;
   spinnerMsg = '';
   profileMsg = '';
   profileError = '';
-  passwordMsg = '';
-  passwordError = '';
-
-  // Fuerza de contraseña
-  strengthLabel = '';
-  strengthBars = [false, false, false];
-  pwdRules = {
-    length: false,
-    lower: false,
-    upper: false,
-    number: false,
-    special: false,
-  };
+  showDeleteConfirm = false;
+  deleteError = '';
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
+    private readonly authService: AuthService,
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -73,8 +56,6 @@ export class CandidateProfileSettingComponent implements OnInit {
         };
       }
     });
-
-    // Sincronizar flags hasCompanyProfile / hasProviderProfile consultando al backend
     this.authService.refreshUserProfiles().subscribe();
   }
 
@@ -96,7 +77,7 @@ export class CandidateProfileSettingComponent implements OnInit {
     this.profileMsg = '';
     this.profileError = '';
 
-    if (!this.userData.firstName || !this.userData.lastName || !this.userData.username || !this.userData.email) {
+    if (!this.userData.firstName || !this.userData.lastName || !this.userData.username) {
       this.profileError = 'Por favor completa todos los campos obligatorios.';
       return;
     }
@@ -104,7 +85,12 @@ export class CandidateProfileSettingComponent implements OnInit {
     this.loading = true;
     this.spinnerMsg = 'Guardando cambios...';
 
-    this.authService.updateProfile(this.userData).subscribe({
+    this.authService.updateProfile({
+      username: this.userData.username,
+      firstName: this.userData.firstName,
+      lastName: this.userData.lastName,
+      phone: this.userData.phone,
+    }).subscribe({
       next: () => {
         this.loading = false;
         this.profileMsg = 'Datos actualizados correctamente.';
@@ -116,75 +102,25 @@ export class CandidateProfileSettingComponent implements OnInit {
     });
   }
 
-  checkStrength(val: string): void {
-    this.pwdRules.length = val.length >= 8;
-    this.pwdRules.lower = /[a-z]/.test(val);
-    this.pwdRules.upper = /[A-Z]/.test(val);
-    this.pwdRules.number = /[0-9]/.test(val);
-    this.pwdRules.special = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(val);
-
-    const passed = Object.values(this.pwdRules).filter(Boolean).length;
-    this.strengthBars = [passed >= 2, passed >= 4, passed === 5];
-
-    if (!val.length) this.strengthLabel = '';
-    else if (passed <= 2) this.strengthLabel = 'Débil';
-    else if (passed <= 4) this.strengthLabel = 'Media';
-    else this.strengthLabel = 'Fuerte';
-  }
-
-  getBarClass(index: number): string {
-    if (!this.strengthBars[index]) return 'sbar';
-    const count = this.strengthBars.filter(Boolean).length;
-    if (count === 1) return 'sbar weak';
-    if (count === 2) return 'sbar medium';
-    return 'sbar strong';
-  }
-
-  get passwordValid(): boolean {
-    return Object.values(this.pwdRules).every(Boolean);
-  }
-
-  onChangePassword(): void {
-    this.passwordMsg = '';
-    this.passwordError = '';
-
-    if (!this.passwords.oldPassword) {
-      this.passwordError = 'Ingresa tu contraseña actual.';
-      return;
-    }
-    if (!this.passwordValid) {
-      this.passwordError = 'La nueva contraseña no cumple los requisitos de seguridad.';
-      return;
-    }
-    if (this.passwords.newPassword !== this.passwords.newPasswordConfirm) {
-      this.passwordError = 'Las contraseñas no coinciden.';
-      return;
-    }
-
-    this.loading = true;
-    this.spinnerMsg = 'Actualizando contraseña...';
-
-    this.authService.changePassword(
-      this.passwords.oldPassword,
-      this.passwords.newPassword,
-      this.passwords.newPasswordConfirm,
-    ).subscribe({
-      next: () => {
-        this.loading = false;
-        this.passwordMsg = 'Contraseña actualizada correctamente.';
-        this.passwords = { oldPassword: '', newPassword: '', newPasswordConfirm: '' };
-        this.strengthLabel = '';
-        this.strengthBars = [false, false, false];
-      },
-      error: (err: any) => {
-        this.loading = false;
-        this.passwordError = err.error?.message || 'Error al cambiar la contraseña.';
-      },
-    });
-  }
-
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  onDeleteAccount(): void {
+    this.deleteError = '';
+    this.loading = true;
+    this.spinnerMsg = 'Eliminando cuenta...';
+    this.authService.deleteAccount().subscribe({
+      next: () => {
+        this.loading = false;
+        this.router.navigate(['/login']);
+      },
+      error: (err: any) => {
+        this.loading = false;
+        this.showDeleteConfirm = false;
+        this.deleteError = err.error?.message || 'Error al eliminar la cuenta.';
+      },
+    });
   }
 }

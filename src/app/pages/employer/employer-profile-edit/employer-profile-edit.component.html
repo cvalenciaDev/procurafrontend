@@ -1,0 +1,228 @@
+<app-spinner *ngIf="loading || saving" [message]="spinnerMsg"></app-spinner>
+
+<app-navbar />
+
+<section class="edit-page">
+  <div class="edit-container">
+
+    <!-- Header -->
+    <div class="edit-header">
+      <button class="btn-back" (click)="goBack()">← Volver al perfil</button>
+      <h1>Editar perfil de empresa</h1>
+      <p>Actualiza la información de tu empresa</p>
+    </div>
+
+    <!-- TARJETA: Logo -->
+    <div class="settings-card">
+      <h4 class="card-section-title">Logo de la empresa</h4>
+
+      <div class="alert-error" *ngIf="logoError">{{ logoError }}</div>
+
+      <div class="logo-area">
+        <label for="logoInput" class="logo-upload-area">
+          <img *ngIf="logoPreview" [src]="logoPreview" class="logo-preview" alt="Logo">
+          <div *ngIf="!logoPreview" class="logo-placeholder">
+            <span class="logo-upload-icon">🏢</span>
+            <span>Subir logo</span>
+            <small>PNG, JPG, WEBP — máx. 2 MB</small>
+          </div>
+        </label>
+        <input id="logoInput" type="file" accept="image/*" style="display:none" (change)="onLogoSelected($event)">
+        <p class="logo-hint" *ngIf="logoPreview">Haz clic en la imagen para cambiarla</p>
+      </div>
+    </div>
+
+    <!-- TARJETA: Información básica -->
+    <div class="settings-card">
+      <h4 class="card-section-title">Información básica</h4>
+
+      <div class="alert-success" *ngIf="successMsg">{{ successMsg }}</div>
+      <div class="alert-error" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+      <form (ngSubmit)="onSave()">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre de la empresa *</label>
+            <div class="input-wrap">
+              <span class="input-icon">🏢</span>
+              <input type="text" placeholder="Ej: Constructora Andes S.A."
+                [(ngModel)]="profile.companyName" name="companyName" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Industria</label>
+            <div class="input-wrap">
+              <span class="input-icon">🏭</span>
+              <input type="text" placeholder="Ej: Construcción"
+                [(ngModel)]="profile.industry" name="industry" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row single">
+          <div class="form-group">
+            <label>Descripción</label>
+            <textarea placeholder="Describe tu empresa..." rows="3"
+              [(ngModel)]="profile.description" name="description"></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Ciudad</label>
+            <div class="input-wrap">
+              <span class="input-icon">📍</span>
+              <input type="text" placeholder="Lima"
+                [(ngModel)]="profile.city" name="city" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>País</label>
+            <div class="input-wrap">
+              <span class="input-icon">🌎</span>
+              <input type="text" placeholder="Perú"
+                [(ngModel)]="profile.country" name="country" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Correo de contacto</label>
+            <div class="input-wrap">
+              <span class="input-icon">✉</span>
+              <input type="email" placeholder="contacto@empresa.com"
+                [(ngModel)]="profile.contactEmail" name="contactEmail" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Teléfono de contacto</label>
+            <div class="input-wrap">
+              <span class="input-icon">📞</span>
+              <input type="tel" placeholder="+51 999 888 777"
+                [(ngModel)]="profile.contactPhone" name="contactPhone" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Sitio web</label>
+            <div class="input-wrap">
+              <span class="input-icon">🌐</span>
+              <input type="url" placeholder="https://empresa.com"
+                [(ngModel)]="profile.website" name="website" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>RUC / Tax ID</label>
+            <div class="input-wrap">
+              <span class="input-icon">📄</span>
+              <input type="text" placeholder="20123456789"
+                [(ngModel)]="profile.taxId" name="taxId" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Dirección</label>
+            <div class="input-wrap">
+              <span class="input-icon">🏠</span>
+              <input type="text" placeholder="Av. Principal 123"
+                [(ngModel)]="profile.address" name="address" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Dirección fiscal</label>
+            <div class="input-wrap">
+              <span class="input-icon">📋</span>
+              <input type="text" placeholder="Dirección fiscal"
+                [(ngModel)]="profile.fiscalAddress" name="fiscalAddress" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Año de fundación</label>
+            <div class="input-wrap">
+              <span class="input-icon">📅</span>
+              <input type="number" placeholder="2005"
+                [(ngModel)]="profile.foundedYear" name="foundedYear" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>N° de empleados</label>
+            <div class="input-wrap">
+              <span class="input-icon">👥</span>
+              <input type="number" placeholder="50"
+                [(ngModel)]="profile.employeesCount" name="employeesCount" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Capacidad máxima</label>
+            <div class="input-wrap">
+              <span class="input-icon">⚡</span>
+              <input type="number" placeholder="100"
+                [(ngModel)]="profile.maxCapacity" name="maxCapacity" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Especialidad</label>
+            <div class="input-wrap">
+              <span class="input-icon">⭐</span>
+              <input type="text" placeholder="Construcción civil"
+                [(ngModel)]="profile.specialty" name="specialty" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Presencia internacional</label>
+            <div class="input-wrap">
+              <span class="input-icon">🌍</span>
+              <input type="text" placeholder="Chile, Colombia"
+                [(ngModel)]="profile.internationalPresence" name="internationalPresence" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Proyectos completados</label>
+            <div class="input-wrap">
+              <span class="input-icon">✅</span>
+              <input type="text" placeholder="50+"
+                [(ngModel)]="profile.completedProjects" name="completedProjects" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row single">
+          <div class="form-group">
+            <label>URL de brochure</label>
+            <div class="input-wrap">
+              <span class="input-icon">📎</span>
+              <input type="url" placeholder="https://empresa.com/brochure.pdf"
+                [(ngModel)]="profile.brochureUrl" name="brochureUrl" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary-action" (click)="goBack()" [disabled]="saving">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primary-action" [disabled]="saving">
+            Guardar cambios
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<app-scroll-to-top />

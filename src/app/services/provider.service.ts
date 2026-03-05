@@ -41,4 +41,8 @@ export class ProviderService {
   getMyProfile(): Observable<ApiResponse<ProviderProfile>> {
     return this.http.get<ApiResponse<ProviderProfile>>(`${this.apiUrl}/my`);
   }
+
+  updateMyProfile(data: Partial<ProviderProfile>): Observable<ApiResponse<ProviderProfile>> {
+    return this.http.put<ApiResponse<ProviderProfile>>(`${this.apiUrl}/profile`, data);
+  }
 }

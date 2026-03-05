@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap, forkJoin, catchError, of, map } from 'rxjs';
+import { Observable, BehaviorSubject, tap, forkJoin, catchError, of, map, concat, last } from 'rxjs';
 import { environment } from '../../environments/environments';
 import { ApiResponse, AuthResponse, User } from '../models/user.model';
 
@@ -107,18 +107,32 @@ export class AuthService {
     );
   }
 
-  updateProfile(data: { firstName: string; lastName: string; username: string; email: string; phone: string }): Observable<ApiResponse<User>> {
+  updateProfile(data: { username: string; firstName: string; lastName: string; phone: string }): Observable<ApiResponse<User>> {
     return this.http.put<ApiResponse<User>>(`${this.apiUrl}/users/me`, data).pipe(
       tap(response => {
         if (response.success) {
-          this.currentUserSubject.next(response.data);
+          const current = this.currentUserSubject.value;
+          this.currentUserSubject.next({ ...current, ...response.data });
         }
       })
     );
   }
 
-  changePassword(oldPassword: string, newPassword: string, newPasswordConfirm: string): Observable<ApiResponse<any>> {
-    return this.http.put<ApiResponse<any>>(`${this.apiUrl}/auth/change-password`, { oldPassword, newPassword, newPasswordConfirm });
+  deleteAccount(): Observable<void> {
+    const user = this.getCurrentUser();
+    const steps: Observable<any>[] = [];
+    if (user?.hasCompanyProfile) {
+      steps.push(this.http.delete(`${this.apiUrl}/companies/my`).pipe(catchError(() => of(null))));
+    }
+    if (user?.hasProviderProfile) {
+      steps.push(this.http.delete(`${this.apiUrl}/providers/my`).pipe(catchError(() => of(null))));
+    }
+    steps.push(this.http.delete<ApiResponse<any>>(`${this.apiUrl}/users/me`));
+    return concat(...steps).pipe(
+      last(),
+      tap(() => this.logout()),
+      map(() => void 0)
+    );
   }
 
   forgotPassword(email: string): Observable<ApiResponse<any>> {

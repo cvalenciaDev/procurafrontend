@@ -1,0 +1,224 @@
+<app-spinner *ngIf="loading || saving" [message]="spinnerMsg"></app-spinner>
+
+<app-navbar />
+
+<section class="edit-page">
+  <div class="edit-container">
+
+    <!-- Header -->
+    <div class="edit-header">
+      <button class="btn-back" (click)="goBack()">← Volver al perfil</button>
+      <h1>Editar perfil de proveedor</h1>
+      <p>Actualiza la información de tu perfil profesional</p>
+    </div>
+
+    <!-- TARJETA: Logo -->
+    <div class="settings-card">
+      <h4 class="card-section-title">Foto / Logo</h4>
+
+      <div class="alert-error" *ngIf="logoError">{{ logoError }}</div>
+
+      <div class="logo-area">
+        <label for="logoInput" class="logo-upload-area">
+          <img *ngIf="logoPreview" [src]="logoPreview" class="logo-preview" alt="Logo">
+          <div *ngIf="!logoPreview" class="logo-placeholder">
+            <span class="logo-upload-icon">👷</span>
+            <span>Subir foto</span>
+            <small>PNG, JPG, WEBP — máx. 2 MB</small>
+          </div>
+        </label>
+        <input id="logoInput" type="file" accept="image/*" style="display:none" (change)="onLogoSelected($event)">
+        <p class="logo-hint" *ngIf="logoPreview">Haz clic en la imagen para cambiarla</p>
+      </div>
+    </div>
+
+    <!-- TARJETA: Información básica -->
+    <div class="settings-card">
+      <h4 class="card-section-title">Información profesional</h4>
+
+      <div class="alert-success" *ngIf="successMsg">{{ successMsg }}</div>
+      <div class="alert-error" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+      <form (ngSubmit)="onSave()">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre del proveedor *</label>
+            <div class="input-wrap">
+              <span class="input-icon">👷</span>
+              <input type="text" placeholder="Ej: Juan Pérez"
+                [(ngModel)]="profile.providerName" name="providerName" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Especialidad</label>
+            <div class="input-wrap">
+              <span class="input-icon">⭐</span>
+              <input type="text" placeholder="Ej: Electricidad industrial"
+                [(ngModel)]="profile.specialty" name="specialty" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row single">
+          <div class="form-group">
+            <label>Descripción</label>
+            <textarea placeholder="Describe tus servicios y experiencia..." rows="3"
+              [(ngModel)]="profile.description" name="description"></textarea>
+          </div>
+        </div>
+
+        <div class="form-row single">
+          <div class="form-group">
+            <label>Servicios</label>
+            <textarea placeholder="Lista los servicios que ofreces..." rows="2"
+              [(ngModel)]="profile.services" name="services"></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Ciudad</label>
+            <div class="input-wrap">
+              <span class="input-icon">📍</span>
+              <input type="text" placeholder="Lima"
+                [(ngModel)]="profile.city" name="city" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>País</label>
+            <div class="input-wrap">
+              <span class="input-icon">🌎</span>
+              <input type="text" placeholder="Perú"
+                [(ngModel)]="profile.country" name="country" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Correo de contacto</label>
+            <div class="input-wrap">
+              <span class="input-icon">✉</span>
+              <input type="email" placeholder="correo@ejemplo.com"
+                [(ngModel)]="profile.contactEmail" name="contactEmail" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Teléfono de contacto</label>
+            <div class="input-wrap">
+              <span class="input-icon">📞</span>
+              <input type="tel" placeholder="+51 999 888 777"
+                [(ngModel)]="profile.contactPhone" name="contactPhone" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>WhatsApp</label>
+            <div class="input-wrap">
+              <span class="input-icon">💬</span>
+              <input type="tel" placeholder="+51 999 888 777"
+                [(ngModel)]="profile.whatsappNumber" name="whatsappNumber" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Años de experiencia</label>
+            <div class="input-wrap">
+              <span class="input-icon">📆</span>
+              <input type="number" placeholder="5"
+                [(ngModel)]="profile.experienceYears" name="experienceYears" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tarifa por hora (USD)</label>
+            <div class="input-wrap">
+              <span class="input-icon">💰</span>
+              <input type="number" placeholder="25"
+                [(ngModel)]="profile.hourlyRate" name="hourlyRate" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>N° de trabajadores</label>
+            <div class="input-wrap">
+              <span class="input-icon">👥</span>
+              <input type="number" placeholder="10"
+                [(ngModel)]="profile.workersCount" name="workersCount" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Sitio web</label>
+            <div class="input-wrap">
+              <span class="input-icon">🌐</span>
+              <input type="url" placeholder="https://tuempresa.com"
+                [(ngModel)]="profile.website" name="website" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Dirección</label>
+            <div class="input-wrap">
+              <span class="input-icon">🏠</span>
+              <input type="text" placeholder="Av. Principal 123"
+                [(ngModel)]="profile.address" name="address" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Certificaciones</label>
+            <div class="input-wrap">
+              <span class="input-icon">🏅</span>
+              <input type="text" placeholder="ISO 9001, OHSAS"
+                [(ngModel)]="profile.certifications" name="certifications" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Lista de clientes</label>
+            <div class="input-wrap">
+              <span class="input-icon">🤝</span>
+              <input type="text" placeholder="Empresa A, Empresa B"
+                [(ngModel)]="profile.clientsList" name="clientsList" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row single">
+          <div class="form-group">
+            <label>URL de brochure</label>
+            <div class="input-wrap">
+              <span class="input-icon">📎</span>
+              <input type="url" placeholder="https://tuempresa.com/brochure.pdf"
+                [(ngModel)]="profile.brochureUrl" name="brochureUrl" />
+            </div>
+          </div>
+        </div>
+
+        <div class="available-toggle form-group">
+          <label>
+            <input type="checkbox" [(ngModel)]="profile.isAvailable" name="isAvailable">
+            Disponible para nuevos proyectos
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary-action" (click)="goBack()" [disabled]="saving">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primary-action" [disabled]="saving">
+            Guardar cambios
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<app-scroll-to-top />

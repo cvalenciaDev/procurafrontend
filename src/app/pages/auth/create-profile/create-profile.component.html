@@ -324,12 +324,18 @@
       </div>
 
       <div class="fg">
-        <label>Logo URL</label>
-        <div class="inp-wrap">
-          <span class="inp-icon">🖼</span>
-          <input type="url" class="fc" placeholder="https://example.com/logo.png"
-            [(ngModel)]="companyProfile.logo" name="logo" />
-        </div>
+        <label>Logo de la empresa</label>
+        <div class="alert-error" *ngIf="logoError && userType === 'COMPANY'" style="margin-bottom:6px; font-size:11px">{{ logoError }}</div>
+        <button type="button" class="logo-upload-area" (click)="companyLogoInput.click()">
+          <img *ngIf="companyLogoPreview" [src]="companyLogoPreview" class="logo-preview" alt="Logo">
+          <div *ngIf="!companyLogoPreview" class="logo-placeholder">
+            <span class="logo-upload-icon">🖼</span>
+            <span>Haz clic para subir tu logo</span>
+            <small>PNG, JPG, WEBP · máx. 2 MB</small>
+          </div>
+        </button>
+        <input #companyLogoInput type="file" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+          (change)="onLogoSelected($event, 'COMPANY')" style="display:none" />
       </div>
 
       <button type="submit" class="btn-submit" [disabled]="loading">
@@ -483,6 +489,21 @@
           <input type="url" class="fc" placeholder="https://example.com/brochure.pdf"
             [(ngModel)]="providerProfile.brochureUrl" name="brochureUrl" />
         </div>
+      </div>
+
+      <div class="fg">
+        <label>Logo del negocio</label>
+        <div class="alert-error" *ngIf="logoError && userType === 'PROVIDER'" style="margin-bottom:6px; font-size:11px">{{ logoError }}</div>
+        <button type="button" class="logo-upload-area" (click)="providerLogoInput.click()">
+          <img *ngIf="providerLogoPreview" [src]="providerLogoPreview" class="logo-preview" alt="Logo">
+          <div *ngIf="!providerLogoPreview" class="logo-placeholder">
+            <span class="logo-upload-icon">🖼</span>
+            <span>Haz clic para subir tu logo</span>
+            <small>PNG, JPG, WEBP · máx. 2 MB</small>
+          </div>
+        </button>
+        <input #providerLogoInput type="file" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+          (change)="onLogoSelected($event, 'PROVIDER')" style="display:none" />
       </div>
 
       <div class="fg available-toggle">

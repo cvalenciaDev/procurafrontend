@@ -24,46 +24,41 @@
 
 <section class="section">
     <div class="container">
-        <div class="row g-4 gy-5">
-            <div *ngFor="let item of companyData" class="col-lg-3 col-md-4 col-sm-6 col-12">
+
+        <app-spinner *ngIf="loading" message="Cargando empresas..."></app-spinner>
+
+        <div class="alert alert-danger text-center" *ngIf="error">{{ error }}</div>
+
+        <div class="row g-4 gy-5" *ngIf="!loading && companies.length > 0">
+            <div *ngFor="let item of companies" class="col-lg-3 col-md-4 col-sm-6 col-12">
                 <div class="employer-card position-relative bg-white rounded shadow p-4 mt-3">
                     <div class="employer-img d-flex justify-content-center align-items-center bg-white shadow-md rounded">
-                        <img [src]="item.image" class="avatar avatar-ex-small" alt="">
+                        <img [src]="item.logo || '/assets/images/company/generic-company.png'"
+                             class="avatar avatar-ex-small" alt="">
                     </div>
 
                     <div class="content mt-3">
-                        <a [routerLink]="['/employer-profile',item.id]" class="title text-dark h5">{{item.name}}</a>
-
-                        <p class="text-muted mt-2 mb-0">{{item.desc}}</p>
+                        <a [routerLink]="['/employer-profile', item.id]" class="title text-dark h5">{{ item.companyName }}</a>
+                        <p class="text-muted mt-2 mb-0">{{ item.description }}</p>
                     </div>
 
                     <ul class="list-unstyled d-flex justify-content-between align-items-center border-top mt-3 pt-3 mb-0">
-                        <li class="text-muted d-inline-flex align-items-center"><i data-feather="map-pin" class="fea icon-sm me-1 align-middle"></i>{{item.loction}}</li>
-                        <li class="list-inline-item text-primary fw-medium">{{item.jobs}} Jobs</li>
+                        <li class="text-muted d-inline-flex align-items-center">
+                            <i data-feather="map-pin" class="fea icon-sm me-1 align-middle"></i>
+                            {{ item.city }}, {{ item.country }}
+                        </li>
+                        <li class="list-inline-item">
+                            <span class="badge bg-soft-primary">{{ item.industry }}</span>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-12 mt-4 pt-2">
-                <ul class="pagination justify-content-center mb-0">
-                    <li class="page-item">
-                        <a class="page-link" [routerLink]="[]" aria-label="Previous">
-                            <span aria-hidden="true"><i class="mdi mdi-chevron-left fs-6"></i></span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" [routerLink]="[]">1</a></li>
-                    <li class="page-item active"><a class="page-link" [routerLink]="[]">2</a></li>
-                    <li class="page-item"><a class="page-link" [routerLink]="[]">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" [routerLink]="[]" aria-label="Next">
-                            <span aria-hidden="true"><i class="mdi mdi-chevron-right fs-6"></i></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+        <div class="text-center py-5" *ngIf="!loading && companies.length === 0 && !error">
+            <p class="text-muted">No hay empresas registradas aún.</p>
         </div>
+
     </div>
 
     <div class="container mt-100 mt-60">

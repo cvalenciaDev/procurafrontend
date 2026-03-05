@@ -8,7 +8,7 @@
     <!-- Header -->
     <div class="settings-header">
       <h1>Configuración de cuenta</h1>
-      <p>Administra tu información personal y seguridad</p>
+      <p>Administra tu información personal</p>
     </div>
 
     <!-- ══════════════════════════════════════ -->
@@ -62,11 +62,10 @@
             </div>
           </div>
           <div class="form-group">
-            <label>Correo electrónico *</label>
+            <label>Correo electrónico</label>
             <div class="input-wrap">
               <span class="input-icon">✉</span>
-              <input type="email" placeholder="juan&#64;empresa.com"
-                [(ngModel)]="userData.email" name="email" />
+              <input type="email" [value]="userData.email" name="email" disabled />
             </div>
           </div>
         </div>
@@ -89,64 +88,7 @@
     </div>
 
     <!-- ══════════════════════════════════════ -->
-    <!-- TARJETA 2: Cambiar contraseña -->
-    <!-- ══════════════════════════════════════ -->
-    <div class="settings-card">
-      <h4 class="card-section-title">Cambiar contraseña</h4>
-      <p class="card-section-desc">Actualiza tu contraseña para mantener tu cuenta segura</p>
-
-      <div class="alert-success" *ngIf="passwordMsg">{{ passwordMsg }}</div>
-      <div class="alert-error" *ngIf="passwordError">{{ passwordError }}</div>
-
-      <form (ngSubmit)="onChangePassword()">
-        <div class="form-group">
-          <label>Contraseña actual</label>
-          <div class="input-wrap">
-            <span class="input-icon">🔒</span>
-            <input type="password" placeholder="••••••••"
-              [(ngModel)]="passwords.oldPassword" name="oldPassword" />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>Nueva contraseña</label>
-            <div class="input-wrap">
-              <span class="input-icon">🔑</span>
-              <input type="password" placeholder="••••••••"
-                [(ngModel)]="passwords.newPassword" name="newPassword"
-                (input)="checkStrength(passwords.newPassword)" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Confirmar nueva</label>
-            <div class="input-wrap">
-              <span class="input-icon">🔑</span>
-              <input type="password" placeholder="••••••••"
-                [(ngModel)]="passwords.newPasswordConfirm" name="newPasswordConfirm" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Barra de fuerza -->
-        <div class="pwd-strength-row" *ngIf="passwords.newPassword">
-          <div class="pwd-bars">
-            <div [class]="getBarClass(0)"></div>
-            <div [class]="getBarClass(1)"></div>
-            <div [class]="getBarClass(2)"></div>
-          </div>
-          <span class="pwd-label">{{ strengthLabel }}</span>
-          <span class="pwd-hint">8+ · <strong>Aa</strong> · <strong>123</strong> · <strong>!&#64;#</strong></span>
-        </div>
-
-        <button type="submit" class="btn-secondary-action" [disabled]="loading">
-          Actualizar contraseña
-        </button>
-      </form>
-    </div>
-
-    <!-- ══════════════════════════════════════ -->
-    <!-- TARJETA 3: Zona de peligro -->
+    <!-- TARJETA 2: Zona de peligro -->
     <!-- ══════════════════════════════════════ -->
     <div class="settings-card danger-zone">
       <h4 class="card-section-title danger">Zona de peligro</h4>
@@ -157,7 +99,7 @@
             <strong>Cerrar sesión</strong>
             <p>Salir de tu cuenta en este dispositivo</p>
           </div>
-          <button class="btn-outline" (click)="logout()">Cerrar sesión</button>
+          <button class="btn-outline" (click)="logout()" [disabled]="loading">Cerrar sesión</button>
         </div>
 
         <div class="danger-divider"></div>
@@ -167,7 +109,20 @@
             <strong>Eliminar cuenta</strong>
             <p>Esta acción es irreversible. Se eliminarán todos tus datos.</p>
           </div>
-          <button class="btn-danger" disabled>Eliminar cuenta</button>
+          <button class="btn-danger" (click)="showDeleteConfirm = true"
+            *ngIf="!showDeleteConfirm" [disabled]="loading">
+            Eliminar cuenta
+          </button>
+        </div>
+
+        <!-- Confirmación inline -->
+        <div class="delete-confirm" *ngIf="showDeleteConfirm">
+          <p>¿Estás seguro? Esta acción <strong>no se puede deshacer</strong>.</p>
+          <div class="alert-error" *ngIf="deleteError">{{ deleteError }}</div>
+          <div class="confirm-actions">
+            <button class="btn-outline" (click)="showDeleteConfirm = false" [disabled]="loading">Cancelar</button>
+            <button class="btn-danger" (click)="onDeleteAccount()" [disabled]="loading">Sí, eliminar mi cuenta</button>
+          </div>
         </div>
       </div>
     </div>

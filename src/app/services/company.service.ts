@@ -5,6 +5,7 @@ import { environment } from '../../environments/environments';
 import { ApiResponse } from '../models/user.model';
 
 export interface CompanyProfile {
+  id?: number;
   companyName: string;
   description: string;
   industry: string;
@@ -40,5 +41,17 @@ export class CompanyService {
 
   getMyProfile(): Observable<ApiResponse<CompanyProfile>> {
     return this.http.get<ApiResponse<CompanyProfile>>(`${this.apiUrl}/my`);
+  }
+
+  updateMyProfile(data: Partial<CompanyProfile>): Observable<ApiResponse<CompanyProfile>> {
+    return this.http.put<ApiResponse<CompanyProfile>>(`${this.apiUrl}/profile`, data);
+  }
+
+  getAll(): Observable<ApiResponse<CompanyProfile[]>> {
+    return this.http.get<ApiResponse<CompanyProfile[]>>(this.apiUrl);
+  }
+
+  getById(id: number): Observable<ApiResponse<CompanyProfile>> {
+    return this.http.get<ApiResponse<CompanyProfile>>(`${this.apiUrl}/${id}`);
   }
 }

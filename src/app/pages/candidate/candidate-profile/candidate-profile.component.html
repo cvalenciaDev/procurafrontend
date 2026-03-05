@@ -27,6 +27,9 @@
                             <span class="badge" [ngClass]="provider.isAvailable ? 'bg-success' : 'bg-secondary'">
                                 {{ provider.isAvailable ? 'Disponible' : 'No disponible' }}
                             </span>
+                            <a [routerLink]="'/candidate-profile-edit'" class="btn btn-sm btn-primary">
+                                <i data-feather="edit" class="fea icon-sm me-1"></i>Editar
+                            </a>
                         </div>
                     </div>
                 </div>

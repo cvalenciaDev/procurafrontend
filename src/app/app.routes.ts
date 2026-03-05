@@ -57,8 +57,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/employer/employer-profile/employer-profile.component').then(c => c.EmployerProfileComponent)
   },
   {
-    path: 'employer-profile/:id', 
+    path: 'employer-profile/:id',
     loadComponent: () => import('./pages/employer/employer-profile/employer-profile.component').then(c => c.EmployerProfileComponent)
+  },
+  {
+    path: 'employer-profile-edit',
+    loadComponent: () => import('./pages/employer/employer-profile-edit/employer-profile-edit.component').then(c => c.EmployerProfileEditComponent)
   },
   
   // Rutas de candidatos (Candidates)
@@ -75,8 +79,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/candidate/candidate-profile/candidate-profile.component').then(c => c.CandidateProfileComponent)
   },
   {
-    path: 'candidate-profile-setting', 
+    path: 'candidate-profile-setting',
     loadComponent: () => import('./pages/candidate/candidate-profile-setting/candidate-profile-setting.component').then(c => c.CandidateProfileSettingComponent)
+  },
+  {
+    path: 'candidate-profile-edit',
+    loadComponent: () => import('./pages/candidate/candidate-profile-edit/candidate-profile-edit.component').then(c => c.CandidateProfileEditComponent)
   },
   
   // Páginas informativas

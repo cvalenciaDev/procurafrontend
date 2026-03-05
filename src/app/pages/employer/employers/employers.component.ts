@@ -1,20 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NavbarComponent } from "../../../components/navbar/navbar/navbar.component";
-import { companyData } from '../../../data/data';
-import { FaqComponent } from "../../../components/faq/faq.component";
-import { FooterTopComponent } from "../../../components/footer-top/footer-top.component";
-import { ScrollToTopComponent } from "../../../components/scroll-to-top/scroll-to-top.component";
-
-interface CompanyData {
-    id: number;
-    image: string;
-    name: string;
-    desc: string;
-    loction: string;
-    jobs: number;
-}
+import { NavbarComponent } from '../../../components/navbar/navbar/navbar.component';
+import { FaqComponent } from '../../../components/faq/faq.component';
+import { FooterTopComponent } from '../../../components/footer-top/footer-top.component';
+import { ScrollToTopComponent } from '../../../components/scroll-to-top/scroll-to-top.component';
+import { SpinnerComponent } from '../../../components/spinner/spinner.component';
+import { CompanyService, CompanyProfile } from '../../../services/company.service';
 
 @Component({
   selector: 'app-employers',
@@ -24,11 +16,29 @@ interface CompanyData {
     NavbarComponent,
     FaqComponent,
     FooterTopComponent,
-    ScrollToTopComponent
-],
+    ScrollToTopComponent,
+    SpinnerComponent,
+  ],
   templateUrl: './employers.component.html',
-  styleUrl: './employers.component.scss'
+  styleUrl: './employers.component.scss',
 })
-export class EmployersComponent {
-  companyData:CompanyData[] = companyData
+export class EmployersComponent implements OnInit {
+  companies: CompanyProfile[] = [];
+  loading = true;
+  error = '';
+
+  constructor(private readonly companyService: CompanyService) {}
+
+  ngOnInit(): void {
+    this.companyService.getAll().subscribe({
+      next: (res) => {
+        this.companies = res.data || [];
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'No se pudieron cargar las empresas.';
+        this.loading = false;
+      },
+    });
+  }
 }

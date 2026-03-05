@@ -25,6 +25,9 @@ export class CreateProfileComponent {
   existsMessage = '';
 
   userName = '';
+  companyLogoPreview = '';
+  providerLogoPreview = '';
+  logoError = '';
 
   companyProfile: CompanyProfile = {
     companyName: '',
@@ -62,6 +65,7 @@ export class CreateProfileComponent {
     workersCount: null,
     whatsappNumber: '',
     brochureUrl: '',
+    logo: '',
   };
 
   constructor(
@@ -218,5 +222,33 @@ export class CreateProfileComponent {
 
   goHome(): void {
     this.router.navigate(['/job-list-one']);
+  }
+
+  onLogoSelected(event: Event, type: 'COMPANY' | 'PROVIDER'): void {
+    this.logoError = '';
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      this.logoError = 'Solo se permiten imágenes (PNG, JPG, WEBP, GIF).';
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      this.logoError = 'La imagen no debe superar 2 MB.';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64 = e.target?.result as string;
+      if (type === 'COMPANY') {
+        this.companyProfile.logo = base64;
+        this.companyLogoPreview = base64;
+      } else {
+        this.providerProfile.logo = base64;
+        this.providerLogoPreview = base64;
+      }
+    };
+    reader.readAsDataURL(file);
   }
 }

@@ -39,6 +39,9 @@
                             <a *ngIf="company.website" [href]="company.website" target="_blank" class="btn btn-sm btn-soft-primary">
                                 <i data-feather="globe" class="fea icon-sm me-1"></i>Sitio web
                             </a>
+                            <a *ngIf="isOwnProfile" [routerLink]="'/employer-profile-edit'" class="btn btn-sm btn-primary">
+                                <i data-feather="edit" class="fea icon-sm me-1"></i>Editar
+                            </a>
                         </div>
                     </div>
                 </div>

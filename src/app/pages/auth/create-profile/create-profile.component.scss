@@ -310,6 +310,48 @@
   span { display: none; color: white; font-size: 12px; font-weight: 700; }
 }
 
+/* ── Logo upload ── */
+
+.logo-upload-area {
+  width: 100%;
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  display: block;
+
+  &:hover {
+    border-color: var(--blue-300);
+    background: white;
+  }
+}
+
+.logo-preview {
+  width: 100%;
+  max-height: 120px;
+  object-fit: contain;
+  display: block;
+  padding: 8px;
+}
+
+.logo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 18px 12px;
+  color: var(--muted);
+
+  span { font-size: 12px; font-weight: 500; }
+  small { font-size: 10.5px; color: #b8c5d6; }
+}
+
+.logo-upload-icon { font-size: 22px; margin-bottom: 2px; }
+
 /* ── Available toggle ── */
 
 .available-toggle {
