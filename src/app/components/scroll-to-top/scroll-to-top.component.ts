@@ -1,13 +1,11 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { Component, HostListener, Inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import * as feather from 'feather-icons'
 
 @Component({
   selector: 'app-scroll-to-top',
   imports: [
     CommonModule,
-    RouterLink
   ],
   templateUrl: './scroll-to-top.component.html',
   styleUrl: './scroll-to-top.component.scss'
