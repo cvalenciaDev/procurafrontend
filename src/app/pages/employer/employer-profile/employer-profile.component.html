@@ -56,30 +56,6 @@
                 <h4 class="mb-3">Sobre la empresa</h4>
                 <p class="text-muted">{{ company.description || 'Sin descripción disponible.' }}</p>
 
-                <div class="row g-3 mt-2" *ngIf="company.specialty || company.internationalPresence || company.completedProjects">
-                    <div class="col-md-4" *ngIf="company.specialty">
-                        <div class="p-3 rounded shadow bg-white text-center">
-                            <i data-feather="star" class="fea icon-md text-primary mb-2"></i>
-                            <h6 class="mb-1">Especialidad</h6>
-                            <p class="text-muted small mb-0">{{ company.specialty }}</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4" *ngIf="company.internationalPresence">
-                        <div class="p-3 rounded shadow bg-white text-center">
-                            <i data-feather="globe" class="fea icon-md text-primary mb-2"></i>
-                            <h6 class="mb-1">Presencia internacional</h6>
-                            <p class="text-muted small mb-0">{{ company.internationalPresence }}</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4" *ngIf="company.completedProjects">
-                        <div class="p-3 rounded shadow bg-white text-center">
-                            <i data-feather="check-circle" class="fea icon-md text-primary mb-2"></i>
-                            <h6 class="mb-1">Proyectos completados</h6>
-                            <p class="text-muted small mb-0">{{ company.completedProjects }}</p>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="mt-4 p-4 rounded shadow bg-white" *ngIf="company.brochureUrl">
                     <h5 class="mb-3">Brochure</h5>
                     <a [href]="company.brochureUrl" target="_blank" class="btn btn-sm btn-primary">
@@ -109,14 +85,6 @@
                         </div>
                     </div>
 
-                    <div class="d-flex align-items-center mt-2" *ngIf="company.address">
-                        <i data-feather="home" class="fea icon-sm text-primary me-2"></i>
-                        <div>
-                            <span class="text-muted fw-medium d-block" style="font-size:12px">Dirección</span>
-                            <span>{{ company.address }}</span>
-                        </div>
-                    </div>
-
                     <div class="d-flex align-items-center mt-2" *ngIf="company.fiscalAddress">
                         <i data-feather="file-text" class="fea icon-sm text-primary me-2"></i>
                         <div>
@@ -137,7 +105,7 @@
                     <h5 class="mb-3">Datos de la empresa</h5>
 
                     <div class="d-flex justify-content-between mt-2" *ngIf="company.foundedYear">
-                        <span class="text-muted fw-medium">Fundada</span>
+                        <span class="text-muted fw-medium">Inicio de actividad</span>
                         <span>{{ company.foundedYear }}</span>
                     </div>
 
@@ -147,7 +115,7 @@
                     </div>
 
                     <div class="d-flex justify-content-between mt-2" *ngIf="company.maxCapacity">
-                        <span class="text-muted fw-medium">Capacidad máx.</span>
+                        <span class="text-muted fw-medium">Capacidad de obra</span>
                         <span>{{ company.maxCapacity }}</span>
                     </div>
 
@@ -164,6 +132,21 @@
                     <div class="d-flex justify-content-between mt-2">
                         <span class="text-muted fw-medium">País</span>
                         <span>{{ company.country }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-2" *ngIf="company.specialty">
+                        <span class="text-muted fw-medium">Especialidad</span>
+                        <span>{{ company.specialty }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-2" *ngIf="company.internationalPresence">
+                        <span class="text-muted fw-medium">Presencia internacional</span>
+                        <span>{{ company.internationalPresence }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-2" *ngIf="company.completedProjects">
+                        <span class="text-muted fw-medium">Proyectos completados</span>
+                        <span>{{ company.completedProjects }}</span>
                     </div>
                 </div>
             </div>

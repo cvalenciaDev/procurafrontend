@@ -187,8 +187,28 @@
           <label>Industria / Sector *</label>
           <div class="inp-wrap">
             <span class="inp-icon">⚙</span>
-            <input type="text" class="fc" placeholder="Construcción"
-              [(ngModel)]="companyProfile.industry" name="industry" />
+            <select class="fc" [(ngModel)]="companyProfile.industry" name="industry">
+              <option value="" disabled selected>Selecciona un sector</option>
+              <option>Construcción e Infraestructura</option>
+              <option>Ingeniería Civil</option>
+              <option>Arquitectura y Diseño</option>
+              <option>Electricidad y Telecomunicaciones</option>
+              <option>Plomería y Sanitarias</option>
+              <option>Minería y Energía</option>
+              <option>Oil & Gas</option>
+              <option>Manufactura e Industria</option>
+              <option>Tecnología e Informática</option>
+              <option>Logística y Transporte</option>
+              <option>Consultoría y Asesoría</option>
+              <option>Servicios Ambientales</option>
+              <option>Seguridad y Vigilancia</option>
+              <option>Limpieza y Mantenimiento</option>
+              <option>Salud y Equipamiento Médico</option>
+              <option>Educación y Capacitación</option>
+              <option>Comercio y Retail</option>
+              <option>Agropecuario y Agroindustria</option>
+              <option>Otro</option>
+            </select>
           </div>
         </div>
         <div class="fg">
@@ -249,7 +269,7 @@
           </div>
         </div>
         <div class="fg">
-          <label>Año de fundación</label>
+          <label>Inicio de actividad</label>
           <div class="inp-wrap">
             <span class="inp-icon">📅</span>
             <input type="number" class="fc" placeholder="2010"
@@ -268,7 +288,7 @@
           </div>
         </div>
         <div class="fg">
-          <label>Capacidad máxima</label>
+          <label>Capacidad de obra</label>
           <div class="inp-wrap">
             <span class="inp-icon">📊</span>
             <input type="number" class="fc" placeholder="15"
@@ -286,22 +306,12 @@
         </div>
       </div>
 
-      <div class="row-2">
-        <div class="fg">
-          <label>Dirección</label>
-          <div class="inp-wrap">
-            <span class="inp-icon">🏠</span>
-            <input type="text" class="fc" placeholder="Av. Aviación 123, Lima"
-              [(ngModel)]="companyProfile.address" name="address" />
-          </div>
-        </div>
-        <div class="fg">
-          <label>Dirección fiscal</label>
-          <div class="inp-wrap">
-            <span class="inp-icon">📄</span>
-            <input type="text" class="fc" placeholder="Av. Aviación 123, Lima 15047"
-              [(ngModel)]="companyProfile.fiscalAddress" name="fiscalAddress" />
-          </div>
+      <div class="fg">
+        <label>Dirección fiscal</label>
+        <div class="inp-wrap">
+          <span class="inp-icon">📄</span>
+          <input type="text" class="fc" placeholder="Av. Aviación 123, Lima 15047"
+            [(ngModel)]="companyProfile.fiscalAddress" name="fiscalAddress" />
         </div>
       </div>
 
@@ -463,22 +473,12 @@
         </div>
       </div>
 
-      <div class="row-2">
-        <div class="fg">
-          <label>Tarifa por hora (USD)</label>
-          <div class="inp-wrap">
-            <span class="inp-icon">💲</span>
-            <input type="number" class="fc" placeholder="75.50" step="0.01"
-              [(ngModel)]="providerProfile.hourlyRate" name="hourlyRate" />
-          </div>
-        </div>
-        <div class="fg">
-          <label>Cantidad de trabajadores</label>
-          <div class="inp-wrap">
-            <span class="inp-icon">👥</span>
-            <input type="number" class="fc" placeholder="45"
-              [(ngModel)]="providerProfile.workersCount" name="workersCount" />
-          </div>
+      <div class="fg">
+        <label>Cantidad de trabajadores</label>
+        <div class="inp-wrap">
+          <span class="inp-icon">👥</span>
+          <input type="number" class="fc" placeholder="45"
+            [(ngModel)]="providerProfile.workersCount" name="workersCount" />
         </div>
       </div>
 

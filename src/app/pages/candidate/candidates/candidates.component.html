@@ -52,12 +52,7 @@
                             <span *ngFor="let tag of getServiceTags(item.services)" class="badge bg-soft-primary rounded-pill me-1">{{ tag }}</span>
                         </div>
 
-                        <div class="mt-2 d-flex align-items-center justify-content-between">
-                            <div class="text-center">
-                                <p class="text-muted fw-medium mb-0">Tarifa/h:</p>
-                                <p class="mb-0 fw-medium">{{ item.hourlyRate ? ('$' + item.hourlyRate) : 'N/A' }}</p>
-                            </div>
-
+                        <div class="mt-2 d-flex align-items-center justify-content-center">
                             <div class="text-center">
                                 <p class="text-muted fw-medium mb-0">Experiencia:</p>
                                 <p class="mb-0 fw-medium">{{ item.experienceYears ? (item.experienceYears + ' anios') : 'N/A' }}</p>

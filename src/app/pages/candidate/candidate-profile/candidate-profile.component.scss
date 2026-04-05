@@ -1,0 +1,8 @@
+:host ::ng-deep #topnav {
+  background-color: #1a3faa !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+:host ::ng-deep #topnav.nav-sticky {
+  background-color: #1a3faa !important;
+}

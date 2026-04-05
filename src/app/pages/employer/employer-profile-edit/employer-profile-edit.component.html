@@ -50,11 +50,31 @@
             </div>
           </div>
           <div class="form-group">
-            <label>Industria</label>
+            <label>Industria / Sector</label>
             <div class="input-wrap">
               <span class="input-icon">🏭</span>
-              <input type="text" placeholder="Ej: Construcción"
-                [(ngModel)]="profile.industry" name="industry" />
+              <select [(ngModel)]="profile.industry" name="industry">
+                <option value="" disabled>Selecciona un sector</option>
+                <option>Construcción e Infraestructura</option>
+                <option>Ingeniería Civil</option>
+                <option>Arquitectura y Diseño</option>
+                <option>Electricidad y Telecomunicaciones</option>
+                <option>Plomería y Sanitarias</option>
+                <option>Minería y Energía</option>
+                <option>Oil & Gas</option>
+                <option>Manufactura e Industria</option>
+                <option>Tecnología e Informática</option>
+                <option>Logística y Transporte</option>
+                <option>Consultoría y Asesoría</option>
+                <option>Servicios Ambientales</option>
+                <option>Seguridad y Vigilancia</option>
+                <option>Limpieza y Mantenimiento</option>
+                <option>Salud y Equipamiento Médico</option>
+                <option>Educación y Capacitación</option>
+                <option>Comercio y Retail</option>
+                <option>Agropecuario y Agroindustria</option>
+                <option>Otro</option>
+              </select>
             </div>
           </div>
         </div>
@@ -124,15 +144,7 @@
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>Dirección</label>
-            <div class="input-wrap">
-              <span class="input-icon">🏠</span>
-              <input type="text" placeholder="Av. Principal 123"
-                [(ngModel)]="profile.address" name="address" />
-            </div>
-          </div>
+        <div class="form-row single">
           <div class="form-group">
             <label>Dirección fiscal</label>
             <div class="input-wrap">
@@ -145,7 +157,7 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label>Año de fundación</label>
+            <label>Inicio de actividad</label>
             <div class="input-wrap">
               <span class="input-icon">📅</span>
               <input type="number" placeholder="2005"
@@ -164,7 +176,7 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label>Capacidad máxima</label>
+            <label>Capacidad de obra</label>
             <div class="input-wrap">
               <span class="input-icon">⚡</span>
               <input type="number" placeholder="100"
