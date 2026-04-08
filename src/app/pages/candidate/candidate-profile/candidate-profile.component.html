@@ -1,5 +1,9 @@
 <app-navbar/>
 
+<div class="d-block d-md-none px-3 pt-3">
+  <button class="btn btn-sm btn-outline-secondary" (click)="goBack()">← Volver</button>
+</div>
+
 <app-spinner *ngIf="loading" message="Cargando perfil..."></app-spinner>
 
 <section class="bg-half-170 d-table w-100" style="background: url('/assets/images/hero/bg5.jpg');" *ngIf="!loading && provider">
@@ -23,7 +27,7 @@
         <div class="row justify-content-center">
             <div class="col-12 mt-4">
                 <div class="features-absolute">
-                    <div class="d-md-flex justify-content-between align-items-center bg-white shadow rounded p-4">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center bg-white shadow rounded p-4">
                         <div class="d-flex align-items-center">
                             <img *ngIf="provider.logo" [src]="provider.logo"
                                  class="avatar avatar-md-md rounded shadow p-1 bg-white" alt="">
@@ -102,54 +106,89 @@
                         <i data-feather="download" class="fea icon-sm me-1"></i>Descargar brochure
                     </a>
                 </div>
+
+                <!-- MEJ-06: Licitaciones del proveedor -->
+                <div class="p-4 rounded shadow bg-white mt-4" *ngIf="isOwnProfile">
+                    <h5 class="mb-3">Mis licitaciones</h5>
+                    <p class="text-muted small" *ngIf="bids.length === 0">Sin licitaciones registradas.</p>
+                    <div class="row g-3" *ngIf="bids.length > 0">
+                        <div *ngFor="let bid of bids" class="col-12">
+                            <div class="border rounded p-3 bg-light">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <a [routerLink]="['/job-detail-one', bid.projectId]" class="fw-semibold text-dark">
+                                        {{ bid.projectTitle || 'Requerimiento #' + bid.projectId }}
+                                    </a>
+                                    <span class="badge ms-2"
+                                          [class.bg-warning]="bid.status === 'PENDING'"
+                                          [class.bg-success]="bid.status === 'ACCEPTED'"
+                                          [class.bg-danger]="bid.status === 'REJECTED'"
+                                          [class.bg-secondary]="bid.status === 'WITHDRAWN'">
+                                        {{ bid.status === 'PENDING' ? 'Pendiente'
+                                         : bid.status === 'ACCEPTED' ? 'Aceptada'
+                                         : bid.status === 'REJECTED' ? 'Rechazada'
+                                         : 'Retirada' }}
+                                    </span>
+                                </div>
+                                <small class="text-muted d-block mt-1" *ngIf="bid.amount">
+                                    Monto: S/ {{ bid.amount }}
+                                </small>
+                                <small class="text-muted d-block" *ngIf="bid.estimatedDays">
+                                    Plazo: {{ bid.estimatedDays }} días
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Sidebar -->
             <div class="col-lg-4 col-md-5 col-12">
                 <div class="card bg-light p-4 rounded shadow sticky-bar">
-                    <h5 class="mb-3">Informacion de contacto</h5>
+                    <div *ngIf="isOwnProfile">
+                        <h5 class="mb-3">Informacion de contacto</h5>
 
-                    <div class="d-flex align-items-center mt-2" *ngIf="provider.contactEmail">
-                        <i data-feather="mail" class="fea icon-sm text-primary me-2"></i>
-                        <div>
-                            <span class="text-muted fw-medium d-block" style="font-size:12px">Correo</span>
-                            <span>{{ provider.contactEmail }}</span>
+                        <div class="d-flex align-items-center mt-2" *ngIf="provider.contactEmail">
+                            <i data-feather="mail" class="fea icon-sm text-primary me-2"></i>
+                            <div>
+                                <span class="text-muted fw-medium d-block" style="font-size:12px">Correo</span>
+                                <span>{{ provider.contactEmail }}</span>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="d-flex align-items-center mt-2" *ngIf="provider.contactPhone">
-                        <i data-feather="phone" class="fea icon-sm text-primary me-2"></i>
-                        <div>
-                            <span class="text-muted fw-medium d-block" style="font-size:12px">Telefono</span>
-                            <span>{{ provider.contactPhone }}</span>
+                        <div class="d-flex align-items-center mt-2" *ngIf="provider.contactPhone">
+                            <i data-feather="phone" class="fea icon-sm text-primary me-2"></i>
+                            <div>
+                                <span class="text-muted fw-medium d-block" style="font-size:12px">Telefono</span>
+                                <span>{{ provider.contactPhone }}</span>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="d-flex align-items-center mt-2" *ngIf="provider.whatsappNumber">
-                        <i data-feather="message-circle" class="fea icon-sm text-success me-2"></i>
-                        <div>
-                            <span class="text-muted fw-medium d-block" style="font-size:12px">WhatsApp</span>
-                            <a [href]="'https://wa.me/' + provider.whatsappNumber" target="_blank">{{ provider.whatsappNumber }}</a>
+                        <div class="d-flex align-items-center mt-2" *ngIf="provider.whatsappNumber">
+                            <i data-feather="message-circle" class="fea icon-sm text-success me-2"></i>
+                            <div>
+                                <span class="text-muted fw-medium d-block" style="font-size:12px">WhatsApp</span>
+                                <a [href]="'https://wa.me/' + provider.whatsappNumber" target="_blank">{{ provider.whatsappNumber }}</a>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="d-flex align-items-center mt-2" *ngIf="provider.address">
-                        <i data-feather="home" class="fea icon-sm text-primary me-2"></i>
-                        <div>
-                            <span class="text-muted fw-medium d-block" style="font-size:12px">Direccion</span>
-                            <span>{{ provider.address }}</span>
+                        <div class="d-flex align-items-center mt-2" *ngIf="provider.address">
+                            <i data-feather="home" class="fea icon-sm text-primary me-2"></i>
+                            <div>
+                                <span class="text-muted fw-medium d-block" style="font-size:12px">Direccion</span>
+                                <span>{{ provider.address }}</span>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="d-flex align-items-center mt-2" *ngIf="provider.website">
-                        <i data-feather="globe" class="fea icon-sm text-primary me-2"></i>
-                        <div>
-                            <span class="text-muted fw-medium d-block" style="font-size:12px">Sitio web</span>
-                            <a [href]="provider.website" target="_blank">{{ provider.website }}</a>
+                        <div class="d-flex align-items-center mt-2" *ngIf="provider.website">
+                            <i data-feather="globe" class="fea icon-sm text-primary me-2"></i>
+                            <div>
+                                <span class="text-muted fw-medium d-block" style="font-size:12px">Sitio web</span>
+                                <a [href]="provider.website" target="_blank">{{ provider.website }}</a>
+                            </div>
                         </div>
-                    </div>
 
-                    <hr class="my-3">
+                        <hr class="my-3">
+                    </div>
                     <h5 class="mb-3">Datos profesionales</h5>
 
                     <div class="d-flex justify-content-between mt-2" *ngIf="provider.specialty">

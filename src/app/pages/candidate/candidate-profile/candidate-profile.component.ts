@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { NavbarComponent } from '../../../components/navbar/navbar/navbar.component';
@@ -6,6 +6,8 @@ import { FooterTopComponent } from '../../../components/footer-top/footer-top.co
 import { ScrollToTopComponent } from '../../../components/scroll-to-top/scroll-to-top.component';
 import { SpinnerComponent } from '../../../components/spinner/spinner.component';
 import { ProviderService, ProviderProfile } from '../../../services/provider.service';
+import { BidService } from '../../../services/bid.service';
+import { Bid } from '../../../models/project.model';
 
 @Component({
   selector: 'app-candidate-profile',
@@ -25,10 +27,13 @@ export class CandidateProfileComponent implements OnInit {
   loading = true;
   error = '';
   isOwnProfile = false;
+  bids: Bid[] = [];
 
   constructor(
     private readonly providerService: ProviderService,
+    private readonly bidService: BidService,
     private readonly route: ActivatedRoute,
+    private readonly locationService: Location,
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +58,12 @@ export class CandidateProfileComponent implements OnInit {
         next: (res) => {
           this.provider = res.data;
           this.loading = false;
+          this.bidService.getMyBids().subscribe({
+            next: (bidRes) => {
+              this.bids = Array.isArray(bidRes?.data) ? bidRes.data : [];
+            },
+            error: () => { this.bids = []; }
+          });
         },
         error: () => {
           this.error = 'No se pudo cargar el perfil de proveedor.';
@@ -60,6 +71,10 @@ export class CandidateProfileComponent implements OnInit {
         },
       });
     }
+  }
+
+  goBack(): void {
+    this.locationService.back();
   }
 
   getInitials(name: string): string {

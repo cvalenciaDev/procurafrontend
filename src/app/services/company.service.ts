@@ -25,6 +25,7 @@ export interface CompanyProfile {
   fiscalAddress: string;
   maxCapacity: number | null;
   brochureUrl?: string;
+  coverImageUrl?: string;
 }
 
 @Injectable({

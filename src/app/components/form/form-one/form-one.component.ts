@@ -1,21 +1,44 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown'
+export interface SearchFilter {
+  text: string;
+  location: string;
+  category: string;
+}
 
 @Component({
   selector: 'app-form-one',
-  imports: [
-    CommonModule,
-    NgMultiSelectDropDownModule
-  ],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './form-one.component.html',
   styleUrl: './form-one.component.scss'
 })
 export class FormOneComponent {
-  loction = ['Abancay','Andahuaylas','Arequipa','Ayacucho','Cajamarca','Cerro de Pasco','Chiclayo','Chimbote','Cusco','Huancayo','Huánuco','Huaraz','Ica','Ilo','Iquitos','Jaén','Juliaca','Lima','Moquegua','Moyobamba','Nasca','Piura','Pucallpa','Puerto Maldonado','Puno','Sullana','Tacna','Tarapoto','Trujillo','Tumbes'] ;
-  type = ['Part Time','Freelancer','Remote Work','Office Work']
-  dropdownSettings = {
-    singleSelection: true,
+  @Output() searchFilter = new EventEmitter<SearchFilter>();
+
+  locations = ['Abancay','Andahuaylas','Arequipa','Ayacucho','Cajamarca','Cerro de Pasco','Chiclayo','Chimbote','Cusco','Huancayo','Huánuco','Huaraz','Ica','Ilo','Iquitos','Jaén','Juliaca','Lima','Moquegua','Moyobamba','Nasca','Piura','Pucallpa','Puerto Maldonado','Puno','Sullana','Tacna','Tarapoto','Trujillo','Tumbes'];
+
+  categories = [
+    { value: 'CONSTRUCTION', label: 'Construcción' },
+    { value: 'MINING', label: 'Minería' },
+    { value: 'AGROINDUSTRY', label: 'Agroindustria' },
+    { value: 'OTHER', label: 'Otro' },
+  ];
+
+  text = '';
+  location = '';
+  category = '';
+
+  onSearch(): void {
+    this.searchFilter.emit({ text: this.text, location: this.location, category: this.category });
+  }
+
+  onReset(): void {
+    this.text = '';
+    this.location = '';
+    this.category = '';
+    this.searchFilter.emit({ text: '', location: '', category: '' });
   }
 }

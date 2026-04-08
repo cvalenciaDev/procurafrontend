@@ -22,6 +22,8 @@ export class EmployerProfileEditComponent implements OnInit {
   errorMsg = '';
   logoPreview = '';
   logoError = '';
+  coverPreview = '';
+  coverError = '';
 
   profile: CompanyProfile = {
     companyName: '',
@@ -55,6 +57,7 @@ export class EmployerProfileEditComponent implements OnInit {
       next: (res) => {
         this.profile = { ...this.profile, ...res.data };
         this.logoPreview = this.profile.logo || '';
+        this.coverPreview = this.profile.coverImageUrl || '';
         this.loading = false;
       },
       error: () => {
@@ -82,6 +85,28 @@ export class EmployerProfileEditComponent implements OnInit {
       const base64 = e.target?.result as string;
       this.profile.logo = base64;
       this.logoPreview = base64;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  onCoverSelected(event: Event): void {
+    this.coverError = '';
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      this.coverError = 'Solo se permiten imágenes (PNG, JPG, WEBP).';
+      return;
+    }
+    if (file.size > 4 * 1024 * 1024) {
+      this.coverError = 'La imagen no debe superar 4 MB.';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64 = e.target?.result as string;
+      this.profile.coverImageUrl = base64;
+      this.coverPreview = base64;
     };
     reader.readAsDataURL(file);
   }

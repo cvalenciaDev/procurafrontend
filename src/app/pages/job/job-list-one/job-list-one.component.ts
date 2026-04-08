@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NavbarComponent } from "../../../components/navbar/navbar/navbar.component";
-import { FormOneComponent } from "../../../components/form/form-one/form-one.component";
+import { FormOneComponent, SearchFilter } from "../../../components/form/form-one/form-one.component";
 import { FeatureOneComponent } from "../../../components/feature/feature-one/feature-one.component";
 import { FooterTopComponent } from "../../../components/footer-top/footer-top.component";
 import { ScrollToTopComponent } from "../../../components/scroll-to-top/scroll-to-top.component";
@@ -25,6 +25,7 @@ import { Project } from '../../../models/project.model';
 })
 export class JobListOneComponent implements OnInit {
   jobData: Project[] = [];
+  allProjects: Project[] = [];
   loading = true;
   error = '';
 
@@ -88,6 +89,7 @@ export class JobListOneComponent implements OnInit {
           all = response.content;
         }
         this.jobData = all.filter((p: Project) => p.status === 'PUBLISHED' || p.status === 'IN_PROGRESS');
+        this.allProjects = this.jobData;
         this.loading = false;
       },
       error: () => {
@@ -95,6 +97,26 @@ export class JobListOneComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  onSearch(filter: SearchFilter): void {
+    this.currentPage = 1;
+    let filtered = [...this.allProjects];
+    if (filter.text) {
+      const t = filter.text.toLowerCase();
+      filtered = filtered.filter(p =>
+        p.title?.toLowerCase().includes(t) ||
+        p.description?.toLowerCase().includes(t) ||
+        p.location?.toLowerCase().includes(t)
+      );
+    }
+    if (filter.location) {
+      filtered = filtered.filter(p => p.location?.toLowerCase().includes(filter.location.toLowerCase()));
+    }
+    if (filter.category) {
+      filtered = filtered.filter(p => p.category === filter.category);
+    }
+    this.jobData = filtered;
   }
 
   get totalPages(): number {

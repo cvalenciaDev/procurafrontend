@@ -1,7 +1,17 @@
 <app-navbar/>
 
-<section class="bg-half-170 d-table w-100" style="background: url('/assets/images/hero/bg4.jpg') center;">
+<div class="d-block d-md-none px-3 pt-3">
+  <button class="btn btn-sm btn-outline-secondary" (click)="goBack()">← Volver</button>
+</div>
+
+<section class="bg-half-170 d-table w-100 position-relative"
+         [style.background]="'url(' + (company?.coverImageUrl || '/assets/images/hero/bg4.jpg') + ') center / cover no-repeat'">
     <div class="bg-overlay bg-gradient-overlay-2"></div>
+    <div *ngIf="isOwnProfile" class="position-absolute bottom-0 end-0 p-3" style="z-index:10">
+        <a [routerLink]="'/employer-profile-edit'" class="btn btn-sm btn-light opacity-90">
+            <i data-feather="camera" class="fea icon-sm me-1"></i>Cambiar portada
+        </a>
+    </div>
 </section>
 <div class="position-relative">
     <div class="shape overflow-hidden text-white">
@@ -22,28 +32,63 @@
         <div class="row justify-content-center">
             <div class="col-12 mt-4">
                 <div class="features-absolute">
-                    <div class="d-md-flex justify-content-between align-items-center bg-white shadow rounded p-4">
-                        <div class="d-flex align-items-center">
-                            <img [src]="company.logo || 'assets/images/company/constructura_andes-logo.png'"
-                                 class="avatar avatar-md-md rounded shadow p-3 bg-white" alt="">
-                            <div class="ms-3">
-                                <h5>{{ company.companyName }}</h5>
-                                <span class="text-muted d-flex align-items-center">
-                                    <i data-feather="map-pin" class="fea icon-sm me-1"></i>
-                                    {{ company.city }}, {{ company.country }}
-                                </span>
-                                <span class="badge bg-soft-primary mt-1">{{ company.industry }}</span>
+                    <div class="bg-white shadow rounded p-4">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                            <div class="d-flex align-items-center">
+                                <img [src]="company.logo || 'assets/images/company/constructura_andes-logo.png'"
+                                     class="avatar avatar-md-md rounded shadow p-3 bg-white" alt="">
+                                <div class="ms-3">
+                                    <h5 class="mb-0">{{ company.companyName }}</h5>
+                                    <span class="text-muted d-flex align-items-center mt-1">
+                                        <i data-feather="map-pin" class="fea icon-sm me-1"></i>
+                                        {{ company.city }}, {{ company.country }}
+                                    </span>
+                                    <span class="badge bg-soft-primary mt-1">{{ company.industry }}</span>
+                                </div>
+                            </div>
+                            <div class="mt-3 mt-md-0 d-flex gap-2">
+                                <a *ngIf="company.website" [href]="company.website" target="_blank" class="btn btn-sm btn-soft-primary">
+                                    <i data-feather="globe" class="fea icon-sm me-1"></i>Sitio web
+                                </a>
+                                <a *ngIf="isOwnProfile" [routerLink]="'/employer-profile-edit'" class="btn btn-sm btn-primary">
+                                    <i data-feather="edit" class="fea icon-sm me-1"></i>Editar
+                                </a>
                             </div>
                         </div>
-                        <div class="mt-4 mt-md-0 d-flex gap-2">
-                            <a *ngIf="company.website" [href]="company.website" target="_blank" class="btn btn-sm btn-soft-primary">
-                                <i data-feather="globe" class="fea icon-sm me-1"></i>Sitio web
-                            </a>
-                            <a *ngIf="isOwnProfile" [routerLink]="'/employer-profile-edit'" class="btn btn-sm btn-primary">
-                                <i data-feather="edit" class="fea icon-sm me-1"></i>Editar
-                            </a>
-                        </div>
+                        <p class="text-muted small mt-3 mb-0" *ngIf="company.description">
+                            {{ company.description.length > 120 ? (company.description | slice:0:120) + '...' : company.description }}
+                        </p>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de métricas MEJ-04 -->
+    <div class="container mt-3" *ngIf="company">
+        <div class="row g-3 text-center">
+            <div class="col-6 col-md-3">
+                <div class="p-3 rounded shadow bg-white">
+                    <h4 class="text-primary mb-1">{{ company.employeesCount || '—' }}</h4>
+                    <p class="text-muted small mb-0">Empleados</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-3 rounded shadow bg-white">
+                    <h4 class="text-primary mb-1">{{ activeProjectsCount }}</h4>
+                    <p class="text-muted small mb-0">Proyectos activos</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-3 rounded shadow bg-white">
+                    <h4 class="text-primary mb-1">{{ company.completedProjects || 0 }}</h4>
+                    <p class="text-muted small mb-0">Proyectos completados</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-3 rounded shadow bg-white">
+                    <h4 class="text-primary mb-1">{{ company.city }}</h4>
+                    <p class="text-muted small mb-0">{{ company.country }}</p>
                 </div>
             </div>
         </div>
@@ -62,46 +107,65 @@
                         <i data-feather="download" class="fea icon-sm me-1"></i>Descargar brochure
                     </a>
                 </div>
+
+                <div class="mt-4" *ngIf="projects.length > 0">
+                    <h5 class="mb-3">Requerimientos publicados</h5>
+                    <div class="row g-3">
+                        <div *ngFor="let p of projects" class="col-12">
+                            <div class="border rounded p-3 bg-white">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a [routerLink]="['/job-detail-one', p.id]" class="fw-semibold text-dark">{{ p.title }}</a>
+                                    <span class="badge bg-soft-primary">{{ categoryLabel(p.category) }}</span>
+                                </div>
+                                <small class="text-muted">{{ p.location }} · {{ p.deadline | date:'dd/MM/yyyy' }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Sidebar -->
             <div class="col-lg-4 col-md-5 col-12">
                 <div class="card bg-white p-4 rounded shadow sticky-bar">
-                    <h5 class="mb-3">Información de contacto</h5>
 
-                    <div class="d-flex align-items-center mt-2" *ngIf="company.contactEmail">
-                        <i data-feather="mail" class="fea icon-sm text-primary me-2"></i>
-                        <div>
-                            <span class="text-muted fw-medium d-block" style="font-size:12px">Correo</span>
-                            <span>{{ company.contactEmail }}</span>
+                    <div *ngIf="isOwnProfile || currentUserType === 'COMPANY'">
+                        <h5 class="mb-3">Información de contacto</h5>
+
+                        <div class="d-flex align-items-center mt-2" *ngIf="company.contactEmail">
+                            <i data-feather="mail" class="fea icon-sm text-primary me-2"></i>
+                            <div>
+                                <span class="text-muted fw-medium d-block" style="font-size:12px">Correo</span>
+                                <span>{{ company.contactEmail }}</span>
+                            </div>
                         </div>
+
+                        <div class="d-flex align-items-center mt-2" *ngIf="company.contactPhone">
+                            <i data-feather="phone" class="fea icon-sm text-primary me-2"></i>
+                            <div>
+                                <span class="text-muted fw-medium d-block" style="font-size:12px">Teléfono</span>
+                                <span>{{ company.contactPhone }}</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center mt-2" *ngIf="company.fiscalAddress">
+                            <i data-feather="file-text" class="fea icon-sm text-primary me-2"></i>
+                            <div>
+                                <span class="text-muted fw-medium d-block" style="font-size:12px">Dirección fiscal</span>
+                                <span>{{ company.fiscalAddress }}</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center mt-2" *ngIf="company.website">
+                            <i data-feather="globe" class="fea icon-sm text-primary me-2"></i>
+                            <div>
+                                <span class="text-muted fw-medium d-block" style="font-size:12px">Sitio web</span>
+                                <a [href]="company.website" target="_blank">{{ company.website }}</a>
+                            </div>
+                        </div>
+
+                        <hr class="my-3">
                     </div>
 
-                    <div class="d-flex align-items-center mt-2" *ngIf="company.contactPhone">
-                        <i data-feather="phone" class="fea icon-sm text-primary me-2"></i>
-                        <div>
-                            <span class="text-muted fw-medium d-block" style="font-size:12px">Teléfono</span>
-                            <span>{{ company.contactPhone }}</span>
-                        </div>
-                    </div>
-
-                    <div class="d-flex align-items-center mt-2" *ngIf="company.fiscalAddress">
-                        <i data-feather="file-text" class="fea icon-sm text-primary me-2"></i>
-                        <div>
-                            <span class="text-muted fw-medium d-block" style="font-size:12px">Dirección fiscal</span>
-                            <span>{{ company.fiscalAddress }}</span>
-                        </div>
-                    </div>
-
-                    <div class="d-flex align-items-center mt-2" *ngIf="company.website">
-                        <i data-feather="globe" class="fea icon-sm text-primary me-2"></i>
-                        <div>
-                            <span class="text-muted fw-medium d-block" style="font-size:12px">Sitio web</span>
-                            <a [href]="company.website" target="_blank">{{ company.website }}</a>
-                        </div>
-                    </div>
-
-                    <hr class="my-3">
                     <h5 class="mb-3">Datos de la empresa</h5>
 
                     <div class="d-flex justify-content-between mt-2" *ngIf="company.foundedYear">

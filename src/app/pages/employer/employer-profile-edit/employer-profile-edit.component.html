@@ -32,6 +32,26 @@
       </div>
     </div>
 
+    <!-- TARJETA: Foto de portada -->
+    <div class="settings-card">
+      <h4 class="card-section-title">Foto de portada</h4>
+
+      <div class="alert-error" *ngIf="coverError">{{ coverError }}</div>
+
+      <div class="cover-area">
+        <label for="coverInput" class="cover-upload-area"
+               [style.backgroundImage]="coverPreview ? 'url(' + coverPreview + ')' : 'none'">
+          <div *ngIf="!coverPreview" class="cover-placeholder">
+            <span class="logo-upload-icon">🖼️</span>
+            <span>Subir foto de portada</span>
+            <small>PNG, JPG, WEBP — máx. 4 MB · Recomendado: 1400×400 px</small>
+          </div>
+          <div *ngIf="coverPreview" class="cover-change-hint">Haz clic para cambiar la portada</div>
+        </label>
+        <input id="coverInput" type="file" accept="image/*" style="display:none" (change)="onCoverSelected($event)">
+      </div>
+    </div>
+
     <!-- TARJETA: Información básica -->
     <div class="settings-card">
       <h4 class="card-section-title">Información básica</h4>
