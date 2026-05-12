@@ -5,7 +5,7 @@ import { NavbarComponent } from '../../../components/navbar/navbar/navbar.compon
 import { FooterTopComponent } from '../../../components/footer-top/footer-top.component';
 import { ScrollToTopComponent } from '../../../components/scroll-to-top/scroll-to-top.component';
 import { SpinnerComponent } from '../../../components/spinner/spinner.component';
-import { ProviderService, ProviderProfile } from '../../../services/provider.service';
+import { ProviderService, ProviderProfile, GalleryItem } from '../../../services/provider.service';
 import { BidService } from '../../../services/bid.service';
 import { Bid } from '../../../models/project.model';
 
@@ -28,6 +28,8 @@ export class CandidateProfileComponent implements OnInit {
   error = '';
   isOwnProfile = false;
   bids: Bid[] = [];
+  gallery: GalleryItem[] = [];
+  lightboxSrc: string | null = null;
 
   constructor(
     private readonly providerService: ProviderService,
@@ -40,11 +42,11 @@ export class CandidateProfileComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
 
     if (id) {
-      // Cargar perfil de otro proveedor por ID
       this.providerService.getById(+id).subscribe({
         next: (res) => {
           this.provider = res.data;
           this.loading = false;
+          this.loadGallery(+id);
         },
         error: () => {
           this.error = 'No se pudo cargar el perfil del proveedor.';
@@ -52,12 +54,12 @@ export class CandidateProfileComponent implements OnInit {
         },
       });
     } else {
-      // Cargar mi propio perfil
       this.isOwnProfile = true;
       this.providerService.getMyProfile().subscribe({
         next: (res) => {
           this.provider = res.data;
           this.loading = false;
+          if (this.provider?.id) { this.loadGallery(this.provider.id); }
           this.bidService.getMyBids().subscribe({
             next: (bidRes) => {
               this.bids = Array.isArray(bidRes?.data) ? bidRes.data : [];
@@ -75,6 +77,29 @@ export class CandidateProfileComponent implements OnInit {
 
   goBack(): void {
     this.locationService.back();
+  }
+
+  private loadGallery(providerId: number): void {
+    this.providerService.getGallery(providerId).subscribe({
+      next: (res) => { this.gallery = Array.isArray(res?.data) ? res.data : []; },
+      error: () => { this.gallery = []; }
+    });
+  }
+
+  openLightbox(src: string): void {
+    this.lightboxSrc = src;
+  }
+
+  closeLightbox(): void {
+    this.lightboxSrc = null;
+  }
+
+  deleteGalleryItem(item: GalleryItem): void {
+    if (!this.provider?.id || !item.id) return;
+    this.providerService.deleteGalleryItem(this.provider.id, item.id).subscribe({
+      next: () => { this.gallery = this.gallery.filter(g => g.id !== item.id); },
+      error: () => {}
+    });
   }
 
   getInitials(name: string): string {

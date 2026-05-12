@@ -1,26 +1,28 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { companyData } from '../../data/data';
-
-interface CompanyData{
-    id: number;
-    image: string;
-    name: string;
-    desc: string;
-    loction: string;
-    jobs: number;
-}
+import { CompanyService, CompanyProfile } from '../../services/company.service';
 
 @Component({
   selector: 'app-best-company',
-  imports: [
-    CommonModule,
-    RouterLink
-  ],
+  imports: [CommonModule, RouterLink],
   templateUrl: './best-company.component.html',
   styleUrl: './best-company.component.scss'
 })
-export class BestCompanyComponent {
-  companyData:CompanyData[] = companyData
+export class BestCompanyComponent implements OnInit {
+  companies: CompanyProfile[] = [];
+  loading = true;
+
+  constructor(private readonly companyService: CompanyService) {}
+
+  ngOnInit(): void {
+    this.companyService.getAll().subscribe({
+      next: (res) => {
+        const all = Array.isArray(res?.data) ? res.data : [];
+        this.companies = all.slice(0, 6);
+        this.loading = false;
+      },
+      error: () => { this.loading = false; }
+    });
+  }
 }

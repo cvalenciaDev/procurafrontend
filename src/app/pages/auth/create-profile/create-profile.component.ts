@@ -28,6 +28,9 @@ export class CreateProfileComponent {
   companyLogoPreview = '';
   providerLogoPreview = '';
   logoError = '';
+  galleryPreviews: string[] = [];
+  galleryFiles: File[] = [];
+  galleryError = '';
 
   companyProfile: CompanyProfile = {
     companyName: '',
@@ -151,26 +154,48 @@ export class CreateProfileComponent {
     if (this.userType === 'COMPANY') {
       this.spinnerMsg = 'Creando perfil de empresa...';
       this.companyService.create(this.companyProfile).subscribe({
-        next: () => this.onProfileSuccess(),
+        next: () => this.finalizeProfile(),
         error: (err: any) => this.onProfileError(err),
       });
     } else {
       this.spinnerMsg = 'Creando perfil de proveedor...';
       this.providerService.create(this.providerProfile).subscribe({
-        next: () => this.onProfileSuccess(),
+        next: (res: any) => {
+          const providerId: number | undefined = res?.data?.id;
+          if (providerId && this.galleryFiles.length > 0) {
+            this.uploadGalleryItems(providerId);
+          } else {
+            this.finalizeProfile();
+          }
+        },
         error: (err: any) => this.onProfileError(err),
       });
     }
   }
 
-  private onProfileSuccess(): void {
+  private uploadGalleryItems(providerId: number): void {
+    this.spinnerMsg = 'Subiendo imágenes de galería...';
+    const uploads = this.galleryFiles.map(file => new Promise<void>(resolve => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const url = e.target?.result as string;
+        this.providerService.addGalleryItem(providerId, { type: 'IMAGE', url }).subscribe({
+          next: () => resolve(),
+          error: () => resolve(),
+        });
+      };
+      reader.readAsDataURL(file);
+    }));
+
+    Promise.all(uploads).then(() => this.finalizeProfile());
+  }
+
+  private finalizeProfile(): void {
     this.spinnerMsg = '¡Perfil creado exitosamente!';
-    // El tipo recién creado se convierte en el activo
     const targetType = this.userType as 'COMPANY' | 'PROVIDER';
 
     this.authService.updateUserType(targetType).subscribe({
       next: () => {
-        // Validar con /companies/my y /providers/my para actualizar hasCompanyProfile/hasProviderProfile
         this.authService.refreshUserProfiles().subscribe({
           next: () => {
             setTimeout(() => {
@@ -222,6 +247,33 @@ export class CreateProfileComponent {
 
   goHome(): void {
     this.router.navigate(['/job-list-one']);
+  }
+
+  onGallerySelected(event: Event): void {
+    this.galleryError = '';
+    const input = event.target as HTMLInputElement;
+    const files = Array.from(input.files ?? []);
+    const remaining = 10 - this.galleryFiles.length;
+    const toAdd = files.slice(0, remaining);
+
+    for (const file of toAdd) {
+      if (file.size > 5 * 1024 * 1024) {
+        this.galleryError = `"${file.name}" supera los 5 MB.`;
+        continue;
+      }
+      this.galleryFiles.push(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.galleryPreviews.push(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+    input.value = '';
+  }
+
+  removeGalleryItem(index: number): void {
+    this.galleryFiles.splice(index, 1);
+    this.galleryPreviews.splice(index, 1);
   }
 
   onLogoSelected(event: Event, type: 'COMPANY' | 'PROVIDER'): void {
