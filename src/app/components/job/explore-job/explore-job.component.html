@@ -1,40 +1,29 @@
 <div class="row g-4 mt-0">
-    <div *ngIf="loading" class="col-12 text-center py-4">
-        <div class="spinner-border text-primary" role="status"></div>
-    </div>
-
-    <div *ngIf="!loading && projects.length === 0" class="col-12 text-center text-muted py-4">
-        No hay requerimientos activos en este momento.
-    </div>
-
-    <div *ngFor="let p of projects" class="col-lg-4 col-md-6 col-12">
+    <div *ngFor="let item of jobData.slice(0,6)" class="col-lg-4 col-md-6 col-12">
         <div class="job-post rounded shadow p-4">
             <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
-                    <img [src]="p.logo || 'assets/images/company/generic-company.png'"
-                         class="avatar avatar-small rounded shadow p-3 bg-white" alt="">
+                    <img [src]="item.image" class="avatar avatar-small rounded shadow p-3 bg-white" alt="">
+
                     <div class="ms-3">
-                        <span class="h5 company text-dark">{{ p.companyName || 'Empresa' }}</span>
-                        <span class="text-muted d-flex align-items-center small mt-2">
-                            <i data-feather="map-pin" class="fea icon-sm me-1"></i>{{ p.location }}
-                        </span>
+                        <a [routerLink]="'/employer-profile'" class="h5 company text-dark">{{item.name}}</a>
+                        <span class="text-muted d-flex align-items-center small mt-2"><i data-feather="clock" class="fea icon-sm me-1"></i> {{item.posted}}</span>
                     </div>
                 </div>
-                <span class="badge bg-soft-primary">{{ categoryLabel(p.category) }}</span>
+
+                <span class="badge bg-soft-primary">{{item.jobType}}</span>
             </div>
 
             <div class="mt-4">
-                <a [routerLink]="['/job-detail-one', p.id]" class="text-dark title h5">{{ p.title }}</a>
+                <a [routerLink]="['/job-detail-one', item.id]" class="text-dark title h5">{{item.title}}</a>
 
-                <div class="d-flex align-items-center justify-content-between mt-3">
-                    <span class="text-muted small">
-                        <i data-feather="calendar" class="fea icon-sm me-1"></i>
-                        Vence: {{ p.deadline | date:'dd/MM/yyyy' }}
-                    </span>
-                    <span class="badge bg-soft-success">
-                        <i data-feather="users" class="fea icon-xs me-1"></i>
-                        {{ totalBids(p) }} postulantes
-                    </span>
+                <span class="text-muted d-flex align-items-center mt-2"><i data-feather="map-pin" class="fea icon-sm me-1"></i>{{item.location}}</span>
+
+                <div class="progress-box mt-3">
+                    <div class="progress mb-2">
+                        <div class="progress-bar position-relative bg-primary" style="width:50%;"></div>
+                    </div>
+                    <span class="text-dark">{{item.applied}} applied of <span class="text-muted">{{item.vacancy}} vacancy</span></span>
                 </div>
             </div>
         </div>
@@ -42,9 +31,7 @@
 
     <div class="col-12 d-md-none d-block">
         <div class="text-center">
-            <a [routerLink]="'/job-list-one'" class="btn btn-link primary text-muted">
-                Ver más requerimientos <i class="mdi mdi-arrow-right"></i>
-            </a>
+            <a [routerLink]="'/job-grid-one'" class="btn btn-link primary text-muted">See More Jobs <i class="mdi mdi-arrow-right"></i></a>
         </div>
     </div>
 </div>

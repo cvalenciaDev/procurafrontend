@@ -4,14 +4,6 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environments';
 import { ApiResponse } from '../models/user.model';
 
-export interface GalleryItem {
-  id?: number;
-  type: 'IMAGE' | 'VIDEO';
-  url: string;
-  title?: string;
-  description?: string;
-}
-
 export interface CompanyProfile {
   id?: number;
   companyName: string;
@@ -62,17 +54,5 @@ export class CompanyService {
 
   getById(id: number): Observable<ApiResponse<CompanyProfile>> {
     return this.http.get<ApiResponse<CompanyProfile>>(`${this.apiUrl}/${id}`);
-  }
-
-  getGallery(id: number): Observable<ApiResponse<GalleryItem[]>> {
-    return this.http.get<ApiResponse<GalleryItem[]>>(`${this.apiUrl}/${id}/gallery`);
-  }
-
-  addGalleryItem(id: number, item: Omit<GalleryItem, 'id'>): Observable<ApiResponse<GalleryItem>> {
-    return this.http.post<ApiResponse<GalleryItem>>(`${this.apiUrl}/${id}/gallery`, item);
-  }
-
-  deleteGalleryItem(companyId: number, mediaId: number): Observable<ApiResponse<any>> {
-    return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/${companyId}/gallery/${mediaId}`);
   }
 }

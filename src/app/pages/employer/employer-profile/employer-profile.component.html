@@ -108,46 +108,14 @@
                     </a>
                 </div>
 
-                <!-- Galería de proyectos -->
-                <div class="mt-4" *ngIf="gallery.length > 0 || isOwnProfile">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="mb-0">Galería de proyectos</h5>
-                        <a *ngIf="isOwnProfile" [routerLink]="'/employer-profile-edit'" class="btn btn-sm btn-outline-primary">
-                            <i data-feather="plus" class="fea icon-sm me-1"></i>Agregar
-                        </a>
-                    </div>
-                    <p class="text-muted small" *ngIf="gallery.length === 0">Aún no hay imágenes. Agrégalas desde "Editar perfil".</p>
-                    <div class="row g-2" *ngIf="gallery.length > 0">
-                        <div *ngFor="let item of gallery" class="col-4 col-md-3">
-                            <div class="gallery-thumb position-relative">
-                                <img [src]="item.url" class="w-100 rounded" style="height:90px; object-fit:cover; cursor:pointer;"
-                                     (click)="openLightbox(item.url)" alt="proyecto" />
-                                <button *ngIf="isOwnProfile" class="gallery-del-btn" (click)="deleteGalleryItem(item)" title="Eliminar">✕</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="mt-4" *ngIf="projects.length > 0">
                     <h5 class="mb-3">Requerimientos publicados</h5>
                     <div class="row g-3">
                         <div *ngFor="let p of projects" class="col-12">
                             <div class="border rounded p-3 bg-white">
-                                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                <div class="d-flex justify-content-between align-items-center">
                                     <a [routerLink]="['/job-detail-one', p.id]" class="fw-semibold text-dark">{{ p.title }}</a>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge bg-soft-primary">{{ categoryLabel(p.category) }}</span>
-                                        <button *ngIf="isOwnProfile" type="button"
-                                            class="btn btn-xs"
-                                            [class.btn-soft-success]="p.isPublic !== false"
-                                            [class.btn-soft-secondary]="p.isPublic === false"
-                                            (click)="toggleVisibility(p)"
-                                            title="Visibilidad pública">
-                                            <i data-feather="eye" class="fea icon-xs me-1" *ngIf="p.isPublic !== false"></i>
-                                            <i data-feather="eye-off" class="fea icon-xs me-1" *ngIf="p.isPublic === false"></i>
-                                            {{ p.isPublic !== false ? 'Público' : 'Oculto' }}
-                                        </button>
-                                    </div>
+                                    <span class="badge bg-soft-primary">{{ categoryLabel(p.category) }}</span>
                                 </div>
                                 <small class="text-muted">{{ p.location }} · {{ p.deadline | date:'dd/MM/yyyy' }}</small>
                             </div>
@@ -249,12 +217,6 @@
         </div>
     </div>
 </section>
-
-<!-- Lightbox -->
-<div *ngIf="lightboxSrc" class="lightbox-overlay" (click)="closeLightbox()">
-    <img [src]="lightboxSrc" class="lightbox-img" alt="galería" />
-    <button class="lightbox-close" (click)="closeLightbox()">✕</button>
-</div>
 
 <app-footer-top/>
 <app-scroll-to-top/>

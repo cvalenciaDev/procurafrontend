@@ -243,36 +243,6 @@
           </div>
         </div>
 
-        <!-- Galería de proyectos -->
-        <div class="form-row single">
-          <div class="form-group">
-            <label>Galería de proyectos</label>
-            <p class="text-muted" style="font-size:12px; margin-bottom:8px;">Sube hasta 10 imágenes de tus proyectos. Máx. 5 MB c/u.</p>
-
-            <div class="alert-error" *ngIf="galleryError" style="font-size:12px; margin-bottom:6px">{{ galleryError }}</div>
-
-            <div class="gallery-grid" *ngIf="gallery.length > 0">
-              <div *ngFor="let item of gallery" class="gallery-thumb">
-                <img [src]="item.url" alt="galería" />
-                <button type="button" class="gallery-del-btn" (click)="deleteExistingGalleryItem(item)" title="Eliminar">✕</button>
-              </div>
-            </div>
-
-            <div class="gallery-grid" *ngIf="galleryPreviews.length > 0">
-              <div *ngFor="let src of galleryPreviews; let i = index" class="gallery-thumb pending">
-                <img [src]="src" alt="nueva" />
-                <button type="button" class="gallery-del-btn" (click)="removeNewGalleryItem(i)" title="Quitar">✕</button>
-              </div>
-            </div>
-
-            <button type="button" class="btn btn-sm btn-outline-primary mt-2" (click)="galleryInput.click()">
-              <i data-feather="plus" class="fea icon-sm me-1"></i>Agregar imágenes
-            </button>
-            <input #galleryInput type="file" accept="image/png,image/jpeg,image/jpg" multiple style="display:none"
-              (change)="onGallerySelected($event)" />
-          </div>
-        </div>
-
         <div class="form-actions">
           <button type="button" class="btn-secondary-action" (click)="goBack()" [disabled]="saving">
             Cancelar

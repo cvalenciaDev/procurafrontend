@@ -6,15 +6,8 @@
 
 <app-spinner *ngIf="loading" message="Cargando perfil..."></app-spinner>
 
-<section class="bg-half-170 d-table w-100 position-relative"
-         [style.background]="'url(' + (provider!.coverImageUrl || '/assets/images/hero/bg5.jpg') + ') center / cover no-repeat'"
-         *ngIf="!loading && provider">
+<section class="bg-half-170 d-table w-100" style="background: url('/assets/images/hero/bg5.jpg');" *ngIf="!loading && provider">
     <div class="bg-overlay bg-gradient-overlay-2"></div>
-    <div *ngIf="isOwnProfile" class="position-absolute bottom-0 end-0 p-3" style="z-index:10">
-        <a [routerLink]="'/candidate-profile-edit'" class="btn btn-sm btn-light opacity-90">
-            <i data-feather="camera" class="fea icon-sm me-1"></i>Cambiar portada
-        </a>
-    </div>
 </section>
 <div class="position-relative" *ngIf="!loading && provider">
     <div class="shape overflow-hidden text-white">
@@ -112,26 +105,6 @@
                     <a [href]="provider.brochureUrl" target="_blank" class="btn btn-sm btn-primary">
                         <i data-feather="download" class="fea icon-sm me-1"></i>Descargar brochure
                     </a>
-                </div>
-
-                <!-- Galería de proyectos -->
-                <div class="p-4 rounded shadow bg-white mt-4" *ngIf="gallery.length > 0 || isOwnProfile">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="mb-0">Galería de proyectos</h5>
-                        <a *ngIf="isOwnProfile" [routerLink]="'/candidate-profile-edit'" class="btn btn-sm btn-outline-primary">
-                            <i data-feather="plus" class="fea icon-sm me-1"></i>Agregar
-                        </a>
-                    </div>
-                    <p class="text-muted small" *ngIf="gallery.length === 0">Aún no hay imágenes. Agrégalas desde "Editar perfil".</p>
-                    <div class="row g-2" *ngIf="gallery.length > 0">
-                        <div *ngFor="let item of gallery" class="col-4 col-md-3">
-                            <div class="gallery-thumb position-relative">
-                                <img [src]="item.url" class="w-100 rounded" style="height:90px; object-fit:cover; cursor:pointer;"
-                                     (click)="openLightbox(item.url)" alt="proyecto" />
-                                <button *ngIf="isOwnProfile" class="gallery-del-btn" (click)="deleteGalleryItem(item)" title="Eliminar">✕</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- MEJ-06: Licitaciones del proveedor -->
@@ -264,12 +237,6 @@
         </div>
     </div>
 </section>
-
-<!-- Lightbox -->
-<div *ngIf="lightboxSrc" class="lightbox-overlay" (click)="closeLightbox()">
-    <img [src]="lightboxSrc" class="lightbox-img" alt="galería" />
-    <button class="lightbox-close" (click)="closeLightbox()">✕</button>
-</div>
 
 <app-footer-top/>
 <app-scroll-to-top/>

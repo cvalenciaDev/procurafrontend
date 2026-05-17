@@ -5,7 +5,7 @@ import { NavbarComponent } from '../../../components/navbar/navbar/navbar.compon
 import { FooterTopComponent } from '../../../components/footer-top/footer-top.component';
 import { ScrollToTopComponent } from '../../../components/scroll-to-top/scroll-to-top.component';
 import { SpinnerComponent } from '../../../components/spinner/spinner.component';
-import { CompanyService, CompanyProfile, GalleryItem } from '../../../services/company.service';
+import { CompanyService, CompanyProfile } from '../../../services/company.service';
 import { ProjectService } from '../../../services/project.service';
 import { AuthService } from '../../../services/auth.service';
 import { Project } from '../../../models/project.model';
@@ -30,8 +30,6 @@ export class EmployerProfileComponent implements OnInit {
   isOwnProfile = false;
   currentUserType: string | null = null;
   projects: Project[] = [];
-  gallery: GalleryItem[] = [];
-  lightboxSrc: string | null = null;
 
   private readonly categoryConfig: Record<string, string> = {
     CONSTRUCTION: 'Construcción',
@@ -60,7 +58,6 @@ export class EmployerProfileComponent implements OnInit {
         next: (res) => {
           this.company = res.data;
           this.loading = false;
-          this.loadGallery(Number(id));
         },
         error: () => {
           this.error = 'No se pudo cargar el perfil de empresa.';
@@ -73,14 +70,18 @@ export class EmployerProfileComponent implements OnInit {
         next: (res) => {
           this.company = res.data;
           this.loading = false;
-          if (this.company?.id) { this.loadGallery(this.company.id); }
           this.projectService.getMyProjects().subscribe({
             next: (projRes: any) => {
               let all: Project[] = [];
-              if (Array.isArray(projRes)) { all = projRes; }
-              else if (Array.isArray(projRes?.data)) { all = projRes.data; }
-              else if (Array.isArray(projRes?.data?.content)) { all = projRes.data.content; }
-              else if (Array.isArray(projRes?.content)) { all = projRes.content; }
+              if (Array.isArray(projRes)) {
+                all = projRes;
+              } else if (Array.isArray(projRes?.data)) {
+                all = projRes.data;
+              } else if (Array.isArray(projRes?.data?.content)) {
+                all = projRes.data.content;
+              } else if (Array.isArray(projRes?.content)) {
+                all = projRes.content;
+              }
               this.projects = all;
             },
             error: () => { this.projects = []; }
@@ -98,33 +99,6 @@ export class EmployerProfileComponent implements OnInit {
     return this.projects.filter(p =>
       p.status === 'PUBLISHED' || p.status === 'IN_PROGRESS'
     ).length;
-  }
-
-  private loadGallery(companyId: number): void {
-    this.companyService.getGallery(companyId).subscribe({
-      next: (res) => { this.gallery = Array.isArray(res?.data) ? res.data : []; },
-      error: () => { this.gallery = []; }
-    });
-  }
-
-  deleteGalleryItem(item: GalleryItem): void {
-    if (!this.company?.id || !item.id) return;
-    this.companyService.deleteGalleryItem(this.company.id, item.id).subscribe({
-      next: () => { this.gallery = this.gallery.filter(g => g.id !== item.id); },
-      error: () => {}
-    });
-  }
-
-  openLightbox(src: string): void { this.lightboxSrc = src; }
-  closeLightbox(): void { this.lightboxSrc = null; }
-
-  toggleVisibility(project: Project): void {
-    if (!project.id) return;
-    const next = !project.isPublic;
-    this.projectService.updateVisibility(project.id, next).subscribe({
-      next: () => { project.isPublic = next; },
-      error: () => {}
-    });
   }
 
   goBack(): void {

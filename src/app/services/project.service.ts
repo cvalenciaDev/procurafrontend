@@ -34,8 +34,4 @@ export class ProjectService {
   delete(id: number): Observable<ApiResponse<any>> {
     return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/${id}`);
   }
-
-  updateVisibility(id: number, isPublic: boolean): Observable<ApiResponse<Project>> {
-    return this.http.put<ApiResponse<Project>>(`${this.apiUrl}/${id}/visibility`, { isPublic });
-  }
 }

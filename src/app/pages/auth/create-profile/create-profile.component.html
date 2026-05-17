@@ -278,6 +278,25 @@
         </div>
       </div>
 
+      <div class="row-2">
+        <div class="fg">
+          <label>Cantidad de empleados</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">👥</span>
+            <input type="number" class="fc" placeholder="150"
+              [(ngModel)]="companyProfile.employeesCount" name="employeesCount" />
+          </div>
+        </div>
+        <div class="fg">
+          <label>Capacidad de obra</label>
+          <div class="inp-wrap">
+            <span class="inp-icon">📊</span>
+            <input type="number" class="fc" placeholder="15"
+              [(ngModel)]="companyProfile.maxCapacity" name="maxCapacity" />
+          </div>
+        </div>
+      </div>
+
       <div class="fg">
         <label>Sitio web</label>
         <div class="inp-wrap">
@@ -492,25 +511,6 @@
           <input type="checkbox" [(ngModel)]="providerProfile.isAvailable" name="isAvailable" />
           Disponible para nuevos proyectos
         </label>
-      </div>
-
-      <div class="fg">
-        <label>Fotos de proyectos (opcional)</label>
-        <small class="text-muted d-block mb-2">Sube hasta 10 imágenes de tus trabajos. Máx. 5 MB por imagen.</small>
-        <div class="alert-error" *ngIf="galleryError" style="margin-bottom:6px; font-size:11px">{{ galleryError }}</div>
-        <button type="button" class="logo-upload-area" style="height:auto; padding:16px; text-align:center;" (click)="galleryInput.click()">
-          <span class="logo-upload-icon">🖼</span>
-          <span>Seleccionar imágenes</span>
-          <small>JPG, PNG — máx. 5 MB c/u</small>
-        </button>
-        <input #galleryInput type="file" accept="image/png,image/jpeg,image/jpg" multiple style="display:none"
-          (change)="onGallerySelected($event)" />
-        <div class="gallery-preview-row" *ngIf="galleryPreviews.length > 0">
-          <div *ngFor="let src of galleryPreviews; let i = index" class="gallery-preview-item">
-            <img [src]="src" alt="preview" />
-            <button type="button" class="gallery-remove-btn" (click)="removeGalleryItem(i)">✕</button>
-          </div>
-        </div>
       </div>
 
       <button type="submit" class="btn-submit" [disabled]="loading">
