@@ -18,6 +18,8 @@ export class NewPasswordComponent implements OnInit {
   successMsg = '';
   errorMsg = '';
   tokenInvalid = false;
+  showPassword = false;
+  showConfirm = false;
 
   constructor(
     private route: ActivatedRoute,

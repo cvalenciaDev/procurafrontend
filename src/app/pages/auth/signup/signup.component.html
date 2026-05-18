@@ -134,13 +134,16 @@
           <div class="inp-wrap">
             <span class="inp-icon">🔒</span>
             <input
-              type="password"
+              [type]="showPassword ? 'text' : 'password'"
               class="fc"
               placeholder="••••••••"
               [(ngModel)]="usuario.password"
               name="password"
               (input)="checkStrength(usuario.password)"
             />
+            <button type="button" class="eye-btn" (click)="showPassword = !showPassword">
+              {{ showPassword ? '🙈' : '👁' }}
+            </button>
           </div>
         </div>
         <div class="fg">
@@ -148,12 +151,15 @@
           <div class="inp-wrap">
             <span class="inp-icon">🔒</span>
             <input
-              type="password"
+              [type]="showConfirm ? 'text' : 'password'"
               class="fc"
               placeholder="••••••••"
               [(ngModel)]="usuario.passwordConfirm"
               name="passwordConfirm"
             />
+            <button type="button" class="eye-btn" (click)="showConfirm = !showConfirm">
+              {{ showConfirm ? '🙈' : '👁' }}
+            </button>
           </div>
         </div>
       </div>

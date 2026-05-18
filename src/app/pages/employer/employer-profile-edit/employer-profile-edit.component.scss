@@ -371,6 +371,46 @@
   }
 }
 
+/* ── Gallery ── */
+
+.gallery-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.gallery-thumb {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+
+  img { width: 100%; height: 100%; object-fit: cover; display: block; }
+}
+
+.gallery-del-btn {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  background: rgba(220,38,38,0.85);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 9px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+
+  &:hover { background: rgb(220,38,38); }
+}
+
 /* ── Responsive ── */
 
 @media (max-width: 640px) {

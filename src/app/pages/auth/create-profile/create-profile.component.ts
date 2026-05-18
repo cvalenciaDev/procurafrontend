@@ -28,6 +28,8 @@ export class CreateProfileComponent {
   companyLogoPreview = '';
   providerLogoPreview = '';
   logoError = '';
+  galleryPreviews: string[] = [];
+  galleryError = '';
 
   companyProfile: CompanyProfile = {
     companyName: '',
@@ -151,19 +153,26 @@ export class CreateProfileComponent {
     if (this.userType === 'COMPANY') {
       this.spinnerMsg = 'Creando perfil de empresa...';
       this.companyService.create(this.companyProfile).subscribe({
-        next: () => this.onProfileSuccess(),
+        next: () => this.finalizeProfile(),
         error: (err: any) => this.onProfileError(err),
       });
     } else {
       this.spinnerMsg = 'Creando perfil de proveedor...';
       this.providerService.create(this.providerProfile).subscribe({
-        next: () => this.onProfileSuccess(),
+        next: async (res: any) => {
+          const providerId = res?.data?.id;
+          if (providerId && this.galleryPreviews.length > 0) {
+            this.spinnerMsg = 'Subiendo fotos de proyectos...';
+            await this.uploadGalleryItems(providerId);
+          }
+          this.finalizeProfile();
+        },
         error: (err: any) => this.onProfileError(err),
       });
     }
   }
 
-  private onProfileSuccess(): void {
+  private finalizeProfile(): void {
     this.spinnerMsg = '¡Perfil creado exitosamente!';
     // El tipo recién creado se convierte en el activo
     const targetType = this.userType as 'COMPANY' | 'PROVIDER';
@@ -222,6 +231,41 @@ export class CreateProfileComponent {
 
   goHome(): void {
     this.router.navigate(['/job-list-one']);
+  }
+
+  onGallerySelected(event: Event): void {
+    this.galleryError = '';
+    const input = event.target as HTMLInputElement;
+    const files = Array.from(input.files || []);
+    const remaining = 10 - this.galleryPreviews.length;
+    files.slice(0, remaining).forEach(file => {
+      if (!file.type.startsWith('image/')) return;
+      if (file.size > 5 * 1024 * 1024) {
+        this.galleryError = 'Algunas imágenes superan 5 MB y fueron ignoradas.';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => { this.galleryPreviews.push(e.target?.result as string); };
+      reader.readAsDataURL(file);
+    });
+    input.value = '';
+  }
+
+  removeGalleryItem(i: number): void {
+    this.galleryPreviews.splice(i, 1);
+  }
+
+  private uploadGalleryItems(providerId: number): Promise<void> {
+    return Promise.all(
+      this.galleryPreviews.map(base64 =>
+        new Promise<void>((resolve) => {
+          this.providerService.addGalleryItem(providerId, { type: 'IMAGE', url: base64 }).subscribe({
+            next: () => resolve(),
+            error: () => resolve(),
+          });
+        })
+      )
+    ).then(() => {});
   }
 
   onLogoSelected(event: Event, type: 'COMPANY' | 'PROVIDER'): void {

@@ -83,13 +83,16 @@
         <div class="inp-wrap">
           <span class="inp-icon">🔒</span>
           <input
-            type="password"
+            [type]="showPassword ? 'text' : 'password'"
             class="fc"
             placeholder="••••••••"
             [(ngModel)]="password"
             name="password"
             required
           />
+          <button type="button" class="eye-btn" (click)="showPassword = !showPassword">
+            {{ showPassword ? '🙈' : '👁' }}
+          </button>
         </div>
       </div>
 

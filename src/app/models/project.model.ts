@@ -15,6 +15,9 @@ interface Project {
   companyId?: number;
   companyName?: string;
   specialty?: string;
+  totalBids?: number;
+  bidsCount?: number;
+  isPublic?: boolean;
 }
 
 interface ProjectResponse {

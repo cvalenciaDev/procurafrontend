@@ -28,6 +28,8 @@ export class SignupComponent {
   successMsg = '';
   loading = false;
   spinnerMsg = '';
+  showPassword = false;
+  showConfirm = false;
 
   pwdRules = {
     length: false,

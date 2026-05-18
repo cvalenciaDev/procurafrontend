@@ -18,6 +18,7 @@ export class LoginComponent {
   loading = false;
   showSpinner = false;
   spinnerMsg = '';
+  showPassword = false;
 
   constructor(
     private authService: AuthService,

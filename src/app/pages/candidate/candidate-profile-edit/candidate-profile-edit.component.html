@@ -12,6 +12,26 @@
       <p>Actualiza la información de tu perfil profesional</p>
     </div>
 
+    <!-- TARJETA: Foto de portada -->
+    <div class="settings-card">
+      <h4 class="card-section-title">Foto de portada</h4>
+
+      <div class="alert-error" *ngIf="coverError">{{ coverError }}</div>
+
+      <div class="cover-area">
+        <label for="coverInput" class="cover-upload-area"
+               [style.backgroundImage]="coverPreview ? 'url(' + coverPreview + ')' : 'none'">
+          <div *ngIf="!coverPreview" class="cover-placeholder">
+            <span class="logo-upload-icon">🖼️</span>
+            <span>Subir foto de portada</span>
+            <small>PNG, JPG, WEBP — máx. 4 MB · Recomendado: 1400×400 px</small>
+          </div>
+          <div *ngIf="coverPreview" class="cover-change-hint">Haz clic para cambiar la portada</div>
+        </label>
+        <input id="coverInput" type="file" accept="image/*" style="display:none" (change)="onCoverSelected($event)">
+      </div>
+    </div>
+
     <!-- TARJETA: Logo -->
     <div class="settings-card">
       <h4 class="card-section-title">Foto / Logo</h4>
@@ -197,6 +217,32 @@
             <input type="checkbox" [(ngModel)]="profile.isAvailable" name="isAvailable">
             Disponible para nuevos proyectos
           </label>
+        </div>
+
+        <!-- Galería de fotos -->
+        <div class="form-row single">
+          <div class="form-group">
+            <label>Galería de fotos</label>
+            <small class="text-muted d-block mb-2">Sube fotos de tus proyectos. Máx. 10 imágenes, 5 MB c/u.</small>
+            <div class="alert-error" *ngIf="galleryError">{{ galleryError }}</div>
+            <div class="gallery-grid" *ngIf="gallery.length > 0 || galleryPreviews.length > 0">
+              <div *ngFor="let item of gallery" class="gallery-thumb">
+                <img [src]="item.url" alt="">
+                <button type="button" class="gallery-del-btn" (click)="deleteExistingGalleryItem(item)">✕</button>
+              </div>
+              <div *ngFor="let src of galleryPreviews; let i = index" class="gallery-thumb">
+                <img [src]="src" alt="">
+                <button type="button" class="gallery-del-btn" (click)="removeNewGalleryItem(i)">✕</button>
+              </div>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-primary mt-2"
+                    *ngIf="gallery.length + galleryPreviews.length < 10"
+                    (click)="galleryFileInput.click()">
+              + Añadir fotos
+            </button>
+            <input #galleryFileInput type="file" accept="image/png,image/jpeg,image/jpg" multiple
+                   style="display:none" (change)="onGallerySelected($event)" />
+          </div>
         </div>
 
         <div class="form-actions">

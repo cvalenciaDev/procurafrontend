@@ -4,6 +4,14 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environments';
 import { ApiResponse } from '../models/user.model';
 
+export interface GalleryItem {
+  id?: number;
+  type: 'IMAGE' | 'VIDEO';
+  url: string;
+  title?: string;
+  description?: string;
+}
+
 export interface ProviderProfile {
   id?: number;
   userId?: number;
@@ -30,6 +38,7 @@ export interface ProviderProfile {
   applicationsCount?: number;
   clientsList?: string;
   associatedCompanyIds?: string;
+  coverImageUrl?: string;
 }
 
 @Injectable({
@@ -58,5 +67,17 @@ export class ProviderService {
 
   updateMyProfile(data: Partial<ProviderProfile>): Observable<ApiResponse<ProviderProfile>> {
     return this.http.put<ApiResponse<ProviderProfile>>(`${this.apiUrl}/profile`, data);
+  }
+
+  getGallery(id: number): Observable<ApiResponse<GalleryItem[]>> {
+    return this.http.get<ApiResponse<GalleryItem[]>>(`${this.apiUrl}/${id}/gallery`);
+  }
+
+  addGalleryItem(id: number, item: Omit<GalleryItem, 'id'>): Observable<ApiResponse<GalleryItem>> {
+    return this.http.post<ApiResponse<GalleryItem>>(`${this.apiUrl}/${id}/gallery`, item);
+  }
+
+  deleteGalleryItem(providerId: number, mediaId: number): Observable<ApiResponse<any>> {
+    return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/${providerId}/gallery/${mediaId}`);
   }
 }

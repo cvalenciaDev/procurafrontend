@@ -362,6 +362,46 @@ select.fc {
 
 .logo-upload-icon { font-size: 22px; margin-bottom: 2px; }
 
+/* ── Gallery preview ── */
+
+.gallery-preview-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.gallery-preview-item {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1.5px solid var(--border);
+
+  img { width: 100%; height: 100%; object-fit: cover; display: block; }
+}
+
+.gallery-remove-btn {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  background: rgba(220,38,38,0.85);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 9px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+
+  &:hover { background: rgb(220,38,38); }
+}
+
 /* ── Available toggle ── */
 
 .available-toggle {
